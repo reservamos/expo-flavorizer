@@ -1,0 +1,20 @@
+{
+  "name": "react-native-flavorizer",
+  "version": "1.0.0",
+  "license": "MIT",
+  "bin": {
+    "flavorizer": "src/index.js"
+  },
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "commander": "^7.2.0",
+    "inquirer": "^8.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
