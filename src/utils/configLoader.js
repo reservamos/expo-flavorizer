@@ -1,15 +1,14 @@
+const chalk = require("chalk");
 const fs = require("fs");
-const CONFIG_FILE = require("../utils/constants").CONFIG_FILE;
+const constants = require("./constants");
 
-function configLoader() {
-  const configFilePath = `${process.cwd()}/${CONFIG_FILE}`;
-
-  if (!fs.existsSync(configFilePath)) {
-    console.log("Configuration file not found");
+function configLoader(filePath) {
+  if (!fs.existsSync(filePath)) {
+    console.log(chalk.red("Configuration file not found"));
     return;
   }
 
-  return JSON.parse(fs.readFileSync(configFilePath));
+  return JSON.parse(fs.readFileSync(filePath));
 }
 
 module.exports = configLoader;

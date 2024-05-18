@@ -7,7 +7,7 @@ const deleteConfigAction = require("./deleteConfigAction");
 
 const CONFIG_FILE = require("../utils/constants").CONFIG_FILE;
 
-function initAction() {
+function initConfigAction() {
   console.log(chalk.green("🚀 Initializing flavorizer configuration"));
   const configFilePath = `${process.cwd()}/${CONFIG_FILE}`;
 
@@ -52,4 +52,4 @@ async function promptDeleteAction(filePath) {
   deleteConfigAction(filePath);
 }
 
-module.exports = initAction;
+module.exports = initConfigAction;

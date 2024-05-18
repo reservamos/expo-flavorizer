@@ -5,9 +5,10 @@ const chalk = require("chalk");
 const program = new Command();
 
 const bootstrap = require("../src/utils/bootstrap");
-const initAction = require("../src/actions/initAction");
+const initConfigAction = require("../src/actions/initConfigAction");
 const listAction = require("../src/actions/listAction");
-const createAction = require("../src/actions/createAction");
+const addFlavorAction = require("../src/actions/addFlavorAction");
+const removeFlavorAction = require("../src/actions/removeFlavorAction");
 
 program
   .name("flavorizer")
@@ -19,17 +20,27 @@ program
 
 program
   .command("list")
-  .description("List all flavors")
+  .description("List all flavors existing in the configuration file")
   .action(bootstrap(listAction));
 
 program
   .command("init")
-  .description("Initialize the flavorizer configuration")
-  .action(bootstrap(initAction));
+  .description("Initialize the flavorizer configuration file")
+  .action(bootstrap(initConfigAction));
 
 program
-  .command("create")
-  .description("Create a new flavor")
-  .action(bootstrap(createAction));
+  .command("add")
+  .description("Add a new flavor to the configuration file")
+  .action(bootstrap(addFlavorAction));
+
+program
+  .command("remove")
+  .description("Remove an existing flavor from the configuration file")
+  .action(bootstrap(removeFlavorAction));
+
+program
+  .command("apply")
+  .description("Apply all changes to the react native project")
+  .action(bootstrap(listAction));
 
 program.parse(process.argv);
