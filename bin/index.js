@@ -36,6 +36,7 @@ program
 program
   .command("remove")
   .description("Remove an existing flavor from the configuration file")
+  .arguments("[flavorName]", "Name of the flavor to remove (optional)")
   .action(bootstrap(removeFlavorAction));
 
 program
