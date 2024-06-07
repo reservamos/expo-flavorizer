@@ -39,3 +39,50 @@ describe("AndroidBuildGradleProcessor", () => {
     expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
   });
 });
+
+describe("AndroidBuildGradleProcessor", () => {
+  it("Test malformed AndroidBuildGradleProcessor", () => {
+    expect(() => {
+      AndroidBuildGradleProcessor("", config);
+    }).toThrow();
+  });
+});
+
+describe("AndroidBuildGradleProcessor", () => {
+  const content = fs.readFileSync(
+    `${process.cwd()}/testResources/android/buildGradleProcessorTest/buildMalformedOne.gradle`,
+    "utf8"
+  );
+
+  it("Test existing flavor dimensions exception AndroidBuildGradleProcessor", () => {
+    expect(() => {
+      AndroidBuildGradleProcessor(content, config);
+    }).toThrow();
+  });
+});
+
+describe("AndroidBuildGradleProcessor", () => {
+  const content = fs.readFileSync(
+    `${process.cwd()}/testResources/android/buildGradleProcessorTest/buildMalformedTwo.gradle`,
+    "utf8"
+  );
+
+  it("Test existing flavor dimensions exception with begin markup AndroidBuildGradleProcessor", () => {
+    expect(() => {
+      AndroidBuildGradleProcessor(content, config);
+    }).toThrow();
+  });
+});
+
+describe("AndroidBuildGradleProcessor", () => {
+  const content = fs.readFileSync(
+    `${process.cwd()}/testResources/android/buildGradleProcessorTest/buildMalformedThree.gradle`,
+    "utf8"
+  );
+
+  it("Test existing flavor dimensions exception with end markup AndroidBuildGradleProcessor", () => {
+    expect(() => {
+      AndroidBuildGradleProcessor(content, config);
+    }).toThrow();
+  });
+});
