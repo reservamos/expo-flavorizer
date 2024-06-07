@@ -33,11 +33,16 @@ function AndroidBuildGradleProcessor(input, config) {
 
   const buffer = [];
 
-  cleanupFlavors(
-    buffer,
+  const cleanedInput = cleanupFlavors(
+    input,
     beginFlavorDimensionsMarkupPosition,
     endFlavorDimensionsMarkupPosition
   );
+
+  if (cleanedInput) {
+    input = cleanedInput;
+  }
+
   appendStartContent(buffer, androidPosition, input);
   appendFlavorsDimension(buffer, config);
   appendFlavors(buffer, config);
@@ -47,7 +52,7 @@ function AndroidBuildGradleProcessor(input, config) {
 }
 
 function cleanupFlavors(
-  buffer,
+  input,
   beginFlavorDimensionsMarkupPosition,
   endFlavorDimensionsMarkupPosition
 ) {
@@ -61,6 +66,7 @@ function cleanupFlavors(
     );
 
     input = input.replaceAll(flavorDimensions, "");
+    return input;
   }
 }
 

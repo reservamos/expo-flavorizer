@@ -18,7 +18,23 @@ describe("AndroidBuildGradleProcessor", () => {
     "utf8"
   );
 
-  it("should process the build.gradle file correctly", () => {
+  it("Test original AndroidBuildGradleProcessor", () => {
+    const result = AndroidBuildGradleProcessor(content, config);
+    expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
+  });
+});
+
+describe("AndroidBuildGradleProcessor", () => {
+  const content = fs.readFileSync(
+    `${process.cwd()}/testResources/android/buildGradleProcessorTest/buildIdempotent.gradle`,
+    "utf8"
+  );
+  const matcher = fs.readFileSync(
+    `${process.cwd()}/testResources/android/buildGradleProcessorTest/buildExpected.gradle`,
+    "utf8"
+  );
+
+  it("Test idempotent AndroidBuildGradleProcessor", () => {
     const result = AndroidBuildGradleProcessor(content, config);
     expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
   });
