@@ -95,9 +95,11 @@ function appendFlavors(buffer, config) {
     buffer.push(`            dimension "${flavorDimension}"`);
     buffer.push(`            applicationId "${flavor.android.applicationId}"`);
 
-    // flavor.android.customConfig.forEach((key, value) => {
-    //   buffer.push(`            ${key} ${value}`);
-    // });
+    if (flavor.android.customConfig) {
+      Object.entries(flavor.android.customConfig).forEach(([key, value]) => {
+        buffer.push(`            ${key} ${value}`);
+      });
+    }
 
     const resValues = {
       appName: {
