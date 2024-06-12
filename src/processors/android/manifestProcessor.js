@@ -1,23 +1,41 @@
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 
 function AndroidManifestProcessor(input, config) {
-  const xmlParser = new XMLParser();
+  const xmlParser = new XMLParser({
+    ignoreAttributes: false,
+    commentPropName: "comment",
+    allowBooleanAttributes: true,
+  });
   const xml = xmlParser.parse(input);
 
-  const applications = xml.manifest.application;
-  if (!applications) {
+  const application = xml.manifest.application;
+  if (!application) {
     throw new Error("MalformedResourceException");
   }
 
-  const androidLabel = applications["@android:label"];
+  const androidLabel = application["@_android:label"];
   if (!androidLabel) {
     throw new Error("MalformedResourceException");
   }
 
-  applications["@android:label"] = "@string/app_name";
+  application["@_android:label"] = "@string/app_name";
 
-  const xmlBuilder = new XMLBuilder();
-  const xmlOutput = xmlBuilder.buildObject(xml);
+  const xmlBuilder = new XMLBuilder({
+    format: true,
+    ignoreAttributes: false,
+    commentPropName: "comment",
+    suppressBooleanAttributes: false,
+    suppressUnpairedNode: false,
+    unpairedTags: [
+      "category",
+      "uses-permission",
+      "data",
+      "meta-data",
+      "activity",
+      "action",
+    ],
+  });
+  const xmlOutput = xmlBuilder.build(xml);
 
   if (!XMLValidator.validate(xmlOutput)) {
     throw new Error("MalformedOutputException");
