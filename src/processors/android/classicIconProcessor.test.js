@@ -8,9 +8,8 @@ const config = configLoader(configFilePath);
 
 describe("AndroidClassicIconProcessor", () => {
   it("Test AndroidClassicIconProcessor", () => {
-    expect(() => {
-      AndroidClassicIconProcessor(config);
-    }).toBeDefined();
+    const processor = AndroidClassicIconProcessor(config);
+    expect(processor).toBeUndefined();
   });
 });
 
