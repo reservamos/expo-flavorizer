@@ -14,7 +14,7 @@
     {
       "flavorName": "apple",
       "appName": "Apple App",
-      "defaultIcon": "path/to/icon",
+      "defaultIcon": "testResources/assets/icon-1.jpg",
       "android": {
         "applicationId": "com.example.apple"
       },
@@ -25,7 +25,7 @@
     {
       "flavorName": "banana",
       "appName": "Banana App",
-      "defaultIcon": "/path/to/icon",
+      "defaultIcon": "testResources/assets/icon-2.jpg",
       "android": {
         "applicationId": "com.example.banana",
         "resValues": {
