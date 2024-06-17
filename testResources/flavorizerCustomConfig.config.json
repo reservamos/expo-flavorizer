@@ -1,0 +1,110 @@
+{
+  "app": {
+    "android": {
+      "flavorDimensions": "dimensions-app"
+    },
+    "ios": {
+      "buildSettings": {
+        "IPHONEOS_DEPLOYMENT_TARGET": "13.0",
+        "MINIMUM_IPHONEOS_VERSION": "13.0"
+      }
+    }
+  },
+  "flavors": [
+    {
+      "flavorName": "apple",
+      "appName": "Apple App",
+      "defaultIcon": "path/to/icon",
+      "android": {
+        "applicationId": "com.example.apple",
+        "customConfig": {
+          "versionNameSuffix": "\"-green-prod\"",
+          "signingConfig": "flavorSigning.green",
+          "versionCode": 1000,
+          "minSdkVersion": 23
+        },
+        "resValues": {
+          "variableOne": {
+            "type": "string",
+            "value": "previous variable one"
+          },
+          "common": {
+            "type": "string",
+            "value": "test common"
+          }
+        },
+        "buildConfigFields": {
+          "fieldOne": {
+            "type": "String",
+            "value": "previous field one"
+          }
+        }
+      },
+      "ios": {
+        "bundleId": "com.example.apple"
+      }
+    },
+    {
+      "flavorName": "banana",
+      "appName": "Banana App",
+      "defaultIcon": "/path/to/icon",
+      "android": {
+        "applicationId": "com.example.banana",
+        "resValues": {
+          "variableOne": {
+            "type": "string",
+            "value": "test variable one"
+          },
+          "common": {
+            "type": "string",
+            "value": "test common"
+          },
+          "variableTwo": {
+            "type": "string",
+            "value": "test variable two"
+          }
+        },
+        "buildConfigFields": {
+          "fieldOne": {
+            "type": "String",
+            "value": "test field one"
+          },
+          "fieldTwo": {
+            "type": "char",
+            "value": "y"
+          },
+          "fieldThree": {
+            "type": "double",
+            "value": "20.0"
+          }
+        }
+      },
+      "ios": {
+        "bundleId": "com.example.banana"
+      }
+    }
+  ],
+  "instructions": [
+    "assets:download",
+    "assets:extract",
+    "android:androidManifest",
+    "android:buildGradle",
+    "android:dummyAssets",
+    "android:icons",
+    "reactnative:flavors",
+    "reactnative:app",
+    "reactnative:pages",
+    "reactnative:main",
+    "reactnative:targets",
+    "ios:xcconfig",
+    "ios:buildTargets",
+    "ios:schema",
+    "ios:dummyAssets",
+    "ios:icons",
+    "ios:plist",
+    "ios:launchScreen",
+    "google:firebase",
+    "assets:clean",
+    "ide:config"
+  ]
+}
