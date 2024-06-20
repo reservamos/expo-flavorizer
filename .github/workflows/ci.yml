@@ -23,7 +23,7 @@ jobs:
         run: npm install -g yarn@1.22.17
 
       - name: Install dependencies
-        run: yarn install --prefer-offline --frozen-lockfile
+        run: yarn install --prefer-offline --frozen-lockfile --ignore-engines
 
       - name: Check for security vulnerabilities
         run: yarn audit --groups dependencies
