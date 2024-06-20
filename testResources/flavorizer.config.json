@@ -14,9 +14,13 @@
     {
       "flavorName": "apple",
       "appName": "Apple App",
-      "defaultIcon": "testResources/assets/icon-1.jpg",
+      "defaultIcon": "testResources/assets/icon-apple.png",
       "android": {
-        "applicationId": "com.example.apple"
+        "applicationId": "com.example.apple",
+        "adaptiveIcon": {
+          "background": "testResources/assets/bg-apple.png",
+          "foreground": "testResources/assets/fg-apple.png"
+        }
       },
       "ios": {
         "bundleId": "com.example.apple"
@@ -25,9 +29,13 @@
     {
       "flavorName": "banana",
       "appName": "Banana App",
-      "defaultIcon": "testResources/assets/icon-2.jpg",
+      "defaultIcon": "testResources/assets/icon-banana.png",
       "android": {
         "applicationId": "com.example.banana",
+        "adaptiveIcon": {
+          "background": "testResources/assets/bg-banana.png",
+          "foreground": "testResources/assets/fg-banana.png"
+        },
         "resValues": {
           "variableOne": {
             "type": "string",
