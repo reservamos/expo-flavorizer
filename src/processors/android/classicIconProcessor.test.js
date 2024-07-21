@@ -7,16 +7,14 @@ const configFilePath = `${process.cwd()}/testResources/${
 const config = configLoader(configFilePath);
 
 describe("AndroidClassicIconProcessor", () => {
-  it("Test AndroidClassicIconProcessor", () => {
-    const processor = AndroidClassicIconProcessor(config);
+  it("Test AndroidClassicIconProcessor", async () => {
+    const processor = await AndroidClassicIconProcessor(config);
     expect(processor).toBeUndefined();
   });
 });
 
 describe("AndroidClassicIconProcessor", () => {
-  it("Test malformed AndroidClassicIconProcessor", () => {
-    expect(() => {
-      AndroidClassicIconProcessor("");
-    }).toThrow();
+  it("Test malformed AndroidClassicIconProcessor", async () => {
+    await expect(AndroidClassicIconProcessor("")).rejects.toThrow();
   });
 });

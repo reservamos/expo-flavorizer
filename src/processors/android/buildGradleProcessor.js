@@ -48,7 +48,7 @@ function AndroidBuildGradleProcessor(input, config) {
   appendFlavors(buffer, config);
   appendEndContent(buffer, androidPosition, input);
 
-  return buffer.join("");
+  return buffer.join("\n");
 }
 
 function cleanupFlavors(
@@ -134,7 +134,6 @@ function appendFlavors(buffer, config) {
   });
 
   buffer.push("    }");
-  buffer.push("");
 }
 
 function appendEndContent(buffer, androidPosition, input) {

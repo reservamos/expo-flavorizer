@@ -8,16 +8,14 @@ const configFilePath = `${process.cwd()}/testResources/${
 const config = configLoader(configFilePath);
 
 describe("AndroidAdaptiveIconProcessor", () => {
-  it("Test AndroidAdaptiveIconProcessor", () => {
-    const processor = AndroidAdaptiveIconProcessor(config);
+  it("Test AndroidAdaptiveIconProcessor", async () => {
+    const processor = await AndroidAdaptiveIconProcessor(config);
     expect(processor).toBeUndefined();
   });
 });
 
 describe("AndroidAdaptiveIconProcessor", () => {
-  it("Test malformed AndroidAdaptiveIconProcessor", () => {
-    expect(() => {
-      AndroidAdaptiveIconProcessor("");
-    }).toThrow();
+  it("Test malformed AndroidAdaptiveIconProcessor", async () => {
+    await expect(AndroidAdaptiveIconProcessor("")).rejects.toThrow();
   });
 });

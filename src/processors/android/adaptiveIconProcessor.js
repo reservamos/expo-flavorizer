@@ -2,7 +2,7 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 
-function AndroidAdaptiveIconProcessor(config) {
+async function AndroidAdaptiveIconProcessor(config) {
   const sizes = {
     "mipmap-mdpi": [48, 48],
     "mipmap-hdpi": [72, 72],
