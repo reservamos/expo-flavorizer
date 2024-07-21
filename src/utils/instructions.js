@@ -5,6 +5,7 @@ const AndroidBuildGradleProcessor = require("../processors/android/buildGradlePr
 const AndroidClassicIconProcessor = require("../processors/android/classicIconProcessor");
 const AndroidClassicRoundedIconProcessor = require("../processors/android/classicRoundedIconProcessor");
 const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIconProcessor");
+const IosIconProcessor = require("../processors/ios/iconProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -101,7 +102,13 @@ async function applyInstructions(configFilePath) {
         // console.log("Adding dummy assets...");
         break;
       case "ios:icons":
-        console.log("Updating iOS icons...");
+        try {
+          console.log("Updating iOS icons...");
+          await IosIconProcessor(config);
+          console.log(`✅ iOS icons updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating iOS icons:", error, "\n");
+        }
         break;
       case "ios:plist":
         // console.log("Updating plist...");

@@ -7,16 +7,14 @@ const configFilePath = `${process.cwd()}/testResources/${
 const config = configLoader(configFilePath);
 
 describe("IosIconProcessor", () => {
-  it("Test IosIconProcessor", () => {
-    const processor = IosIconProcessor(config);
+  it("Test IosIconProcessor", async () => {
+    const processor = await IosIconProcessor(config);
     expect(processor).toBeUndefined();
   });
 });
 
 describe("IosIconProcessor", () => {
-  it("Test malformed IosIconProcessor", () => {
-    expect(() => {
-      IosIconProcessor("");
-    }).toThrow();
+  it("Test malformed IosIconProcessor", async () => {
+    await expect(IosIconProcessor("")).rejects.toThrow();
   });
 });
