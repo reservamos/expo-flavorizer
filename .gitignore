@@ -133,6 +133,9 @@ dist
 flavorizer.config.json
 !/testResources/flavorizer.config.json
 
+# react native flavorizer test assets
+/assets
+
 # react native flavorizer generated outputs
 /android
 /ios
