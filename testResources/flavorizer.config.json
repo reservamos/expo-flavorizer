@@ -24,7 +24,7 @@
         "splash": {
           "image": "testResources/assets/fg-apple.png",
           "resizeMode": "cover",
-          "backgroundColor": "#FF0021"
+          "backgroundColor": "#C35955"
         }
       },
       "ios": {
@@ -44,7 +44,7 @@
         "splash": {
           "image": "testResources/assets/fg-banana.png",
           "resizeMode": "cover",
-          "backgroundColor": "#171717"
+          "backgroundColor": "#E4C65C"
         },
         "resValues": {
           "variableOne": {
