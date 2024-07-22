@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { platform } = require("os");
 
-function IosIconProcessor(config) {
+async function IosIconProcessor(config) {
   const sizes = {
     "Icon-App-20x20@2x.png": [40, 40],
     "Icon-App-20x20@3x.png": [60, 60],
@@ -36,9 +36,21 @@ function IosIconProcessor(config) {
       );
     }
 
-    let appName;
-    if (ios) {
-      appName = ios.bundleId.split(".").pop();
+    // find <project>.xcodeproj folder for get project name
+
+    const iosFolderExists = fs.existsSync(`${process.cwd()}/ios`);
+    if (!iosFolderExists) {
+      // throw new Error("IosFolderNotFoundException");
+      return;
+    }
+
+    let projectName = fs
+      .readdirSync(`${process.cwd()}/ios`)
+      .find((folder) => folder.match(/\.xcodeproj/g));
+    projectName = projectName.replace(".xcodeproj", "");
+
+    if (!projectName) {
+      throw new Error("ProjectNameNotFoundException");
     }
 
     const iconBuffer = fs.readFileSync(defaultIcon);
@@ -50,9 +62,7 @@ function IosIconProcessor(config) {
       },
     };
 
-    const iOSAppPath = `${process.cwd()}/ios/${
-      appName.charAt(0).toUpperCase() + appName.slice(1)
-    }/Images.xcassets/${
+    const iOSAppPath = `${process.cwd()}/ios/${projectName}/Images.xcassets/${
       flavorName.charAt(0).toUpperCase() + flavorName.slice(1)
     }AppIcon.appiconset`;
 

@@ -7,6 +7,7 @@ const program = new Command();
 const bootstrap = require("../src/utils/bootstrap");
 const initConfigAction = require("../src/actions/initConfigAction");
 const listAction = require("../src/actions/listAction");
+const applyAction = require("../src/actions/applyAction");
 const addFlavorAction = require("../src/actions/addFlavorAction");
 const removeFlavorAction = require("../src/actions/removeFlavorAction");
 
@@ -42,6 +43,6 @@ program
 program
   .command("apply")
   .description("Apply all changes to the react native project")
-  .action(bootstrap(listAction));
+  .action(bootstrap(applyAction));
 
 program.parse(process.argv);
