@@ -56,6 +56,7 @@ async function IosIconProcessor(config) {
       .find((folder) => folder.match(/\.xcodeproj/g));
 
     if (!projectName) {
+      // throw new Error("ProjectNameNotFoundException")
       console.log(
         chalk.yellow("ProjectNameNotFoundException:"),
         "your icons will be created in the default project folder (flavorizer)"
