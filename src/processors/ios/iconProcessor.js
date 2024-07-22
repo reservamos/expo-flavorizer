@@ -40,7 +40,8 @@ async function IosIconProcessor(config) {
 
     const iosFolderExists = fs.existsSync(`${process.cwd()}/ios`);
     if (!iosFolderExists) {
-      throw new Error("IosFolderNotFoundException");
+      // throw new Error("IosFolderNotFoundException");
+      return;
     }
 
     let projectName = fs
