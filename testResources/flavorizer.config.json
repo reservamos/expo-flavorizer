@@ -20,6 +20,11 @@
         "adaptiveIcon": {
           "background": "testResources/assets/bg-apple.png",
           "foreground": "testResources/assets/fg-apple.png"
+        },
+        "splash": {
+          "image": "testResources/assets/fg-apple.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#C35955"
         }
       },
       "ios": {
@@ -35,6 +40,11 @@
         "adaptiveIcon": {
           "background": "testResources/assets/bg-banana.png",
           "foreground": "testResources/assets/fg-banana.png"
+        },
+        "splash": {
+          "image": "testResources/assets/fg-banana.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#E4C65C"
         },
         "resValues": {
           "variableOne": {
