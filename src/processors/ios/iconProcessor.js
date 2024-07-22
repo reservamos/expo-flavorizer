@@ -2,6 +2,7 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 const { platform } = require("os");
+const chalk = require("chalk");
 
 async function IosIconProcessor(config) {
   const sizes = {
@@ -40,17 +41,29 @@ async function IosIconProcessor(config) {
 
     const iosFolderExists = fs.existsSync(`${process.cwd()}/ios`);
     if (!iosFolderExists) {
-      throw new Error("IosFolderNotFoundException");
+      // throw new Error("IosFolderNotFoundException");
+      console.log(
+        chalk.red("IosFolderNotFoundException:"),
+        "Please check if flavorizer is running on a valid react native project folder, if you using Expo, consider run the prebuild command:",
+        chalk.green("npx expo prebuild"),
+        "meanwhile we will create ios folder"
+      );
+      fs.mkdirSync(`${process.cwd()}/ios`);
     }
 
     let projectName = fs
       .readdirSync(`${process.cwd()}/ios`)
       .find((folder) => folder.match(/\.xcodeproj/g));
-    projectName = projectName.replace(".xcodeproj", "");
 
     if (!projectName) {
-      throw new Error("ProjectNameNotFoundException");
+      console.log(
+        chalk.yellow("ProjectNameNotFoundException:"),
+        "your icons will be created in the default project folder (flavorizer)"
+      );
+      projectName = "flavorizer.xcodeproj";
     }
+
+    projectName = projectName.replace(".xcodeproj", "");
 
     const iconBuffer = fs.readFileSync(defaultIcon);
     const contentsJson = {
