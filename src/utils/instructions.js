@@ -6,6 +6,7 @@ const AndroidClassicIconProcessor = require("../processors/android/classicIconPr
 const AndroidClassicRoundedIconProcessor = require("../processors/android/classicRoundedIconProcessor");
 const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIconProcessor");
 const IosIconProcessor = require("../processors/ios/iconProcessor");
+const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -114,7 +115,13 @@ async function applyInstructions(configFilePath) {
         // console.log("Updating plist...");
         break;
       case "ios:launchScreen":
-        // console.log("Updating launchScreen...");
+        try {
+          console.log("Updating launchScreen...");
+          await IosLaunchScreenProcessor(config);
+          console.log(`✅ LaunchScreen updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating launchScreen:", error, "\n");
+        }
         break;
       case "google:firebase":
         // console.log("Updating firebase...");
