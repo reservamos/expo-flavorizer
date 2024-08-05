@@ -8,6 +8,7 @@ const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIcon
 const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
 const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
+const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -95,7 +96,13 @@ async function applyInstructions(configFilePath) {
         // console.log("Updating xcconfig...");
         break;
       case "ios:buildTargets":
-        // console.log("Updating buildTargets...");
+        try {
+          console.log("Updating buildTargets...");
+          await IosBuildTargetsProcessor(config);
+          console.log(`✅ BuildTargets updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating buildTargets:", error, "\n");
+        }
         break;
       case "ios:schema":
         try {
