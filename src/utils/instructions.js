@@ -7,6 +7,7 @@ const AndroidClassicRoundedIconProcessor = require("../processors/android/classi
 const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIconProcessor");
 const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
+const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -97,7 +98,13 @@ async function applyInstructions(configFilePath) {
         // console.log("Updating buildTargets...");
         break;
       case "ios:schema":
-        // console.log("Updating schema...");
+        try {
+          console.log("Updating schemas...");
+          await IosSchemasProcessor(config);
+          console.log(`✅ Schemas updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating schemas:", error, "\n");
+        }
         break;
       case "ios:dummyAssets":
         // console.log("Adding dummy assets...");
