@@ -28,7 +28,11 @@
         }
       },
       "ios": {
-        "bundleId": "com.example.apple"
+        "bundleId": "com.example.apple",
+        "launchScreen": {
+          "backgroundColor": "#C35955",
+          "image": "testResources/assets/fg-apple.png"
+        }
       }
     },
     {
@@ -72,7 +76,11 @@
         }
       },
       "ios": {
-        "bundleId": "com.example.banana"
+        "bundleId": "com.example.banana",
+        "launchScreen": {
+          "backgroundColor": "#E4C65C",
+          "image": "testResources/assets/fg-banana.png"
+        }
       }
     }
   ],
