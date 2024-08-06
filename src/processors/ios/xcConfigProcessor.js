@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { spawnSync } = require("child_process");
 const {
   validateIosFolder,
@@ -23,20 +24,56 @@ async function IosXcConfigProcessor(config) {
     const buildtargets = ["Debug", "Release"];
 
     for (const buildtarget of buildtargets) {
+      const flavorXcConfig = `${flavorName}${buildtarget}.xcconfig`;
+      const flavorXcConfigPath = `${process.cwd()}/ios/${projectName}/${flavorXcConfig}`;
+      const referencePath = `${projectName}/${flavorXcConfig}`;
+
+      await generateXcConfigFile(
+        buildtarget,
+        projectName,
+        flavor,
+        flavorBuildSettings,
+        flavorXcConfigPath
+      );
+
       const processCreateScheme = spawnSync(
         "ruby",
         [
           rubyScript,
           xcodeProjPath,
-          //   xcconfigPath,
-          flavorName,
-          buildtarget,
-          flavorBuildSettings.toString("base64"),
+          flavorXcConfigPath,
+          projectName,
+          referencePath,
         ],
         { stdio: "inherit" }
       );
     }
   }
+}
+
+async function generateXcConfigFile(
+  buildTarget,
+  projectName,
+  flavor,
+  buildSettings,
+  flavorXcConfigPath
+) {
+  let buffer = [];
+
+  buffer.push(
+    `#include? "Pods/Target Support Files/Pods-${projectName}/Pods-${projectName}.${buildTarget.toLowerCase()}.xcconfig"`
+  );
+  buffer.push("");
+  buffer.push(`ASSET_PREFIX=${flavor.flavorName}`);
+  buffer.push(`BUNDLE_NAME=${flavor.flavorName}`);
+  buffer.push(`BUNDLE_DISPLAY_NAME=${flavor.appName}`);
+  buffer.push("");
+
+  for (const [key, value] of Object.entries(buildSettings)) {
+    buffer.push(`${key}=${value}`);
+  }
+
+  fs.writeFileSync(flavorXcConfigPath, buffer.join("\n"));
 }
 
 module.exports = IosXcConfigProcessor;
