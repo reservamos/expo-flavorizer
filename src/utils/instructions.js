@@ -5,6 +5,7 @@ const AndroidBuildGradleProcessor = require("../processors/android/buildGradlePr
 const AndroidClassicIconProcessor = require("../processors/android/classicIconProcessor");
 const AndroidClassicRoundedIconProcessor = require("../processors/android/classicRoundedIconProcessor");
 const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIconProcessor");
+const AndroidSplashScreenProcessor = require("../processors/android/splashScreenProcessor");
 const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
 const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
@@ -76,6 +77,15 @@ async function applyInstructions(configFilePath) {
           console.log(`✅ Android adaptive icons updated!\n`);
         } catch (error) {
           console.error("❌ Error updating android icons:", error, "\n");
+        }
+        break;
+      case "android:splashScreen":
+        try {
+          console.log("Updating android splash screen...");
+          await AndroidSplashScreenProcessor(config);
+          console.log(`✅ Android splash screen updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating splash screen:", error, "\n");
         }
         break;
       case "reactnative:flavors":
