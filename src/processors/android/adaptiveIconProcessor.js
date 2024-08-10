@@ -4,11 +4,11 @@ const path = require("path");
 
 async function AndroidAdaptiveIconProcessor(config) {
   const sizes = {
-    "mipmap-mdpi": [48, 48],
-    "mipmap-hdpi": [72, 72],
-    "mipmap-xhdpi": [96, 96],
-    "mipmap-xxhdpi": [144, 144],
-    "mipmap-xxxhdpi": [192, 192],
+    "mipmap-mdpi": [108, 108],
+    "mipmap-hdpi": [162, 162],
+    "mipmap-xhdpi": [216, 216],
+    "mipmap-xxhdpi": [324, 324],
+    "mipmap-xxxhdpi": [432, 432],
   };
 
   if (!config) {
@@ -20,7 +20,7 @@ async function AndroidAdaptiveIconProcessor(config) {
     const { adaptiveIcon } = android;
 
     if (adaptiveIcon) {
-      const { background, foreground } = adaptiveIcon;
+      const { background, foreground, foregroundScale } = adaptiveIcon;
 
       if (!fs.existsSync(background)) {
         throw new Error(
@@ -28,6 +28,7 @@ async function AndroidAdaptiveIconProcessor(config) {
         );
       }
 
+      // generate background icon with 100% of the size by default
       generateAdaptiveIcon(
         background,
         "ic_launcher_background",
@@ -41,19 +42,25 @@ async function AndroidAdaptiveIconProcessor(config) {
         );
       }
 
+      // generate foreground icon with 60% of the size by default
       generateAdaptiveIcon(
         foreground,
         "ic_launcher_foreground",
         sizes,
-        flavorName
+        flavorName,
+        foregroundScale
       );
 
-      generateAdaptiveIconXML(flavorName);
+      // generate adaptive icon XML
+      generateAdaptiveIconXML(flavorName, "ic_launcher");
+
+      // generate adaptive icon round XML
+      generateAdaptiveIconXML(flavorName, "ic_launcher_round");
     }
   });
 }
 
-function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName) {
+function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName, scale) {
   const iconBuffer = fs.readFileSync(iconPath);
 
   Object.keys(sizes).forEach((size) => {
@@ -68,18 +75,50 @@ function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName) {
       fs.mkdirSync(path.dirname(icon), { recursive: true });
     }
 
-    sharp(iconBuffer)
-      .resize(width, height)
-      .toFile(icon, (err) => {
-        if (err) {
-          throw err;
-        }
-      });
+    if (iconName === "ic_launcher_foreground") {
+      // scale foreground icon to 60% of the size
+      const prefferedScale = scale ?? 0.6;
+      const scaledWidth = Math.round(width * prefferedScale);
+      const scaledHeight = Math.round(height * prefferedScale);
+
+      sharp(iconBuffer)
+        .resize(scaledWidth, scaledHeight)
+        .toBuffer()
+        .then((buffer) => {
+          sharp({
+            create: {
+              width: width,
+              height: height,
+              channels: 4,
+              background: { r: 255, g: 255, b: 255, alpha: 0 },
+            },
+          })
+            .composite([
+              {
+                input: buffer,
+                gravity: "centre",
+              },
+            ])
+            .toFile(icon, (err) => {
+              if (err) {
+                throw err;
+              }
+            });
+        });
+    } else {
+      sharp(iconBuffer)
+        .resize(width, height)
+        .toFile(icon, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
+    }
   });
 }
 
-function generateAdaptiveIconXML(flavorName) {
-  const xmlFilePath = `${process.cwd()}/android/app/src/${flavorName}/res/mipmap-anydpi-v26/ic_launcher.xml`;
+function generateAdaptiveIconXML(flavorName, iconXMLName) {
+  const xmlFilePath = `${process.cwd()}/android/app/src/${flavorName}/res/mipmap-anydpi-v26/${iconXMLName}.xml`;
   const xml = path.resolve(xmlFilePath);
   const xmlExists = fs.existsSync(xml);
 

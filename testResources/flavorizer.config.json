@@ -19,7 +19,8 @@
         "applicationId": "com.example.apple",
         "adaptiveIcon": {
           "background": "testResources/assets/bg-apple.png",
-          "foreground": "testResources/assets/fg-apple.png"
+          "foreground": "testResources/assets/fg-apple.png",
+          "foregroundScale": "0.6"
         },
         "splash": {
           "image": "testResources/assets/fg-apple.png",
@@ -43,7 +44,8 @@
         "applicationId": "com.example.banana",
         "adaptiveIcon": {
           "background": "testResources/assets/bg-banana.png",
-          "foreground": "testResources/assets/fg-banana.png"
+          "foreground": "testResources/assets/fg-banana.png",
+          "foregroundScale": "0.6"
         },
         "splash": {
           "image": "testResources/assets/fg-banana.png",
