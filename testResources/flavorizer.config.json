@@ -24,6 +24,9 @@
         },
         "splash": {
           "image": "testResources/assets/fg-apple.png",
+          "imageScale": "0.6",
+          "imageWidth": "300",
+          "imageHeight": "300",
           "resizeMode": "cover",
           "backgroundColor": "#C35955"
         }
@@ -49,6 +52,9 @@
         },
         "splash": {
           "image": "testResources/assets/fg-banana.png",
+          "imageScale": "0.6",
+          "imageWidth": "300",
+          "imageHeight": "300",
           "resizeMode": "cover",
           "backgroundColor": "#E4C65C"
         },
