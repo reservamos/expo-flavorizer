@@ -59,14 +59,17 @@ async function generateXcConfigFile(
   flavorXcConfigPath
 ) {
   let buffer = [];
+  const capitalizedFlavorName =
+    flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
 
   buffer.push(
     `#include? "Pods/Target Support Files/Pods-${projectName}/Pods-${projectName}.${buildTarget.toLowerCase()}.xcconfig"`
   );
   buffer.push("");
-  buffer.push(`ASSET_PREFIX=${flavor.flavorName}`);
-  buffer.push(`BUNDLE_NAME=${flavor.flavorName}`);
-  buffer.push(`BUNDLE_DISPLAY_NAME=${flavor.appName}`);
+  buffer.push(`ASSET_PREFIX=${capitalizedFlavorName}`);
+  buffer.push(`PRODUCT_NAME=${flavor.flavorName}`);
+  buffer.push(`PRODUCT_DISPLAY_NAME=${flavor.appName}`);
+  buffer.push(`PRODUCT_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
   buffer.push("");
 
   for (const [key, value] of Object.entries(buildSettings)) {

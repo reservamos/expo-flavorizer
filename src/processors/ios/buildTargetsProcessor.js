@@ -25,6 +25,7 @@ async function IosBuildTargetsProcessor(config) {
     for (const buildtarget of buildtargets) {
       const flavorXcConfig = `${flavorName}${buildtarget}.xcconfig`;
       const flavorXcConfigPath = `${process.cwd()}/ios/${projectName}/${flavorXcConfig}`;
+      const flavorXcConfigFileReference = `${projectName}/${flavorXcConfig}`;
       const buildSettingsString = JSON.stringify(flavorBuildSettings);
       const buildSettingsBase64 = new Buffer.from(buildSettingsString).toString(
         "base64"
@@ -35,7 +36,7 @@ async function IosBuildTargetsProcessor(config) {
         [
           rubyScript,
           xcodeProjPath,
-          flavorXcConfigPath,
+          flavorXcConfigFileReference,
           flavorName,
           buildtarget,
           buildSettingsBase64,

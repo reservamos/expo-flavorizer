@@ -4,7 +4,8 @@ const path = require("path");
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 
 async function AndroidSplashScreenProcessor(config) {
-  const size = [1242, 2436];
+  const size = [1284, 2778];
+  const densities = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
 
   if (!config) {
     throw new Error("NoConfigurationFileException");
@@ -15,7 +16,14 @@ async function AndroidSplashScreenProcessor(config) {
     const { splash } = android;
 
     if (splash) {
-      const { image, resizeMode, backgroundColor } = splash;
+      const {
+        image,
+        resizeMode,
+        backgroundColor,
+        imageScale,
+        imageWidth,
+        imageHeight,
+      } = splash;
 
       if (!fs.existsSync(image)) {
         throw new Error(
@@ -23,18 +31,41 @@ async function AndroidSplashScreenProcessor(config) {
         );
       }
 
-      await generateSplashScreenImage(image, size, flavorName);
+      // generate splashscreen images
+      for (const density of densities) {
+        await generateSplashScreenImage(
+          image,
+          size,
+          flavorName,
+          density,
+          imageScale,
+          imageWidth,
+          imageHeight
+        );
+      }
+
+      // generate colors.xml
       await generateColorsXML(flavorName, backgroundColor);
+
+      // generate splashscreen.xml
       await generateSplashScreenXML(flavorName);
     }
   }
 }
 
-async function generateSplashScreenImage(imagePath, size, flavorName) {
+async function generateSplashScreenImage(
+  imagePath,
+  size,
+  flavorName,
+  density,
+  imageScale,
+  imageWidth,
+  imageHeight
+) {
   const imageBuffer = fs.readFileSync(imagePath);
 
   const [width, height] = size;
-  const imageOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable/splashscreen_image.png`;
+  const imageOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable-${density}/splashscreen_image.png`;
   const image = path.resolve(imageOutputPath);
   const imageExists = fs.existsSync(image);
 
@@ -44,31 +75,36 @@ async function generateSplashScreenImage(imagePath, size, flavorName) {
     fs.mkdirSync(path.dirname(image), { recursive: true });
   }
 
-  //   calculate image size that will be keep aspect ratio,
-  //   but scaled to fit the screen with a horizontal padding
-  //   of 20% of the screen width
-  //   const imageRatio = width / height;
-  //   const imageWidth = width * 0.8;
-  //   const imageHeight = imageWidth / imageRatio;
+  // resize image based on width, height and scale
+  const prefferedScale = imageScale ?? 1.0;
+  const prefferedImageWidth = imageWidth ?? 1024;
+  const prefferedImageHeight = imageHeight ?? 1024;
+  const scaledWidth = Math.round(prefferedImageWidth * prefferedScale);
+  const scaledHeight = Math.round(prefferedImageHeight * prefferedScale);
 
-  sharp({
-    create: {
-      width: width,
-      height: height,
-      channels: 4,
-      background: { r: 255, g: 255, b: 255, alpha: 0 },
-    },
-  })
-    .composite([
-      {
-        input: imageBuffer,
-        gravity: "centre",
-      },
-    ])
-    .toFile(image, (err) => {
-      if (err) {
-        throw err;
-      }
+  sharp(imageBuffer)
+    .resize(scaledWidth, scaledHeight)
+    .toBuffer()
+    .then((buffer) => {
+      sharp({
+        create: {
+          width: width,
+          height: height,
+          channels: 4,
+          background: { r: 255, g: 255, b: 255, alpha: 0 },
+        },
+      })
+        .composite([
+          {
+            input: buffer,
+            gravity: "centre",
+          },
+        ])
+        .toFile(image, (err) => {
+          if (err) {
+            throw err;
+          }
+        });
     });
 }
 
@@ -174,7 +210,6 @@ async function generateSplashScreenXML(flavorName) {
   const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:drawable="@color/splashscreen_background"/>
-
   <item>
     <bitmap
       android:gravity="center"
