@@ -19,10 +19,14 @@
         "applicationId": "com.example.apple",
         "adaptiveIcon": {
           "background": "testResources/assets/bg-apple.png",
-          "foreground": "testResources/assets/fg-apple.png"
+          "foreground": "testResources/assets/fg-apple.png",
+          "foregroundScale": "0.6"
         },
         "splash": {
           "image": "testResources/assets/fg-apple.png",
+          "imageScale": "0.6",
+          "imageWidth": "300",
+          "imageHeight": "300",
           "resizeMode": "cover",
           "backgroundColor": "#C35955"
         }
@@ -43,10 +47,14 @@
         "applicationId": "com.example.banana",
         "adaptiveIcon": {
           "background": "testResources/assets/bg-banana.png",
-          "foreground": "testResources/assets/fg-banana.png"
+          "foreground": "testResources/assets/fg-banana.png",
+          "foregroundScale": "0.6"
         },
         "splash": {
           "image": "testResources/assets/fg-banana.png",
+          "imageScale": "0.6",
+          "imageWidth": "300",
+          "imageHeight": "300",
           "resizeMode": "cover",
           "backgroundColor": "#E4C65C"
         },
@@ -85,12 +93,10 @@
     }
   ],
   "instructions": [
-    "assets:download",
-    "assets:extract",
     "android:androidManifest",
     "android:buildGradle",
-    "android:dummyAssets",
     "android:icons",
+    "android:splashScreen",
     "reactnative:flavors",
     "reactnative:app",
     "reactnative:pages",
@@ -99,12 +105,10 @@
     "ios:xcconfig",
     "ios:buildTargets",
     "ios:schema",
-    "ios:dummyAssets",
     "ios:icons",
     "ios:plist",
     "ios:launchScreen",
     "google:firebase",
-    "assets:clean",
     "ide:config"
   ]
 }
