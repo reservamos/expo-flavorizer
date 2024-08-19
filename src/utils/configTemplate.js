@@ -13,18 +13,30 @@ function configTemplate() {
     },
     flavors: [
       {
-        flavorName: "flavorname",
-        app: {
-          name: "App Name",
-          icon: "path/to/your/icon.png",
-        },
+        flavorName: "apple",
+        appName: "Apple App",
+        defaultIcon: "path/to/your/default-icon.png",
         android: {
-          applicationId: "com.example.app",
+          applicationId: "com.example.apple",
+          adaptiveIcon: {
+            background: "path/to/your/background-image.png",
+            foreground: "path/to/your/foreground-image.png",
+            foregroundScale: "0.6",
+          },
+          splash: {
+            image: "path/to/your/foreground-image.png",
+            imageScale: "0.6",
+            imageWidth: "300",
+            imageHeight: "300",
+            resizeMode: "cover",
+            backgroundColor: "#C35955",
+          },
         },
         ios: {
-          bundleId: "com.example.app",
-          buildSettings: {
-            DEVELOPMENT_TEAM: "ABCDEFGHIJ",
+          bundleId: "com.example.apple",
+          launchScreen: {
+            backgroundColor: "#C35955",
+            image: "path/to/your/foreground-image.png",
           },
         },
       },
