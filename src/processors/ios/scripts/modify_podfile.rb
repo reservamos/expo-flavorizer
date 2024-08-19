@@ -26,7 +26,7 @@ if matches.length > 1
     second_target_start = podfile_content.index(matches[1][0])
 
     # Extract content from the second target to the end of the file
-    additional_targets_block = "target \'" + podfile_content[second_target_start..-1].strip
+    additional_targets_block = "\ntarget \'" + podfile_content[second_target_start..-1].strip
 end
 
 abstract_target_block = "abstract_target 'common' do" \
@@ -96,7 +96,8 @@ abstract_target_block = "abstract_target 'common' do" \
 "\n"\
 "\n  target 'apple' do"\
 "\n  end"\
-"\nend"
+"\nend"\
+"\n"
 
 new_podfile_content = initial_block + abstract_target_block + additional_targets_block
 File.write(podfile_path, new_podfile_content, mode: 'w', encoding: 'UTF-8')
