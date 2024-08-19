@@ -75,10 +75,10 @@ abstract_target 'common' do
   target 'example' do
   end
 
-  target 'banana' do
+  target 'apple' do
   end
 
-  target 'apple' do
+  target 'banana' do
   end
 end
 

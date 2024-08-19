@@ -1,12 +1,13 @@
 require 'fileutils'
 
-if ARGV.length != 2
-    puts 'We need exactly two arguments'
+if ARGV.length != 3
+    puts 'We need exactly 3 arguments'
     exit
 end
 
 podfile_path = ARGV[0]
 project_name = ARGV[1]
+target_flavors = ARGV[2]
 
 podfile_content = File.read(podfile_path, encoding: 'UTF-8')
 
@@ -28,6 +29,16 @@ if matches.length > 1
     # Extract content from the second target to the end of the file
     additional_targets_block = "\ntarget \'" + podfile_content[second_target_start..-1].strip
 end
+
+# generate flavor targets
+flavor_targets = ''
+flavors = [project_name].concat(target_flavors.split(','))
+flavors.each do |flavor|
+    flavor_targets += "\n"\
+"\n  target '#{flavor}' do"\
+"\n  end"
+end
+
 
 abstract_target_block = "abstract_target 'common' do" \
 "\n  use_expo_modules!" \
@@ -87,15 +98,7 @@ abstract_target_block = "abstract_target 'common' do" \
 "\n      Pod::UI.warn e"\
 "\n    end"\
 "\n  end"\
-"\n"\
-"\n  target 'example' do"\
-"\n  end"\
-"\n"\
-"\n  target 'banana' do"\
-"\n  end"\
-"\n"\
-"\n  target 'apple' do"\
-"\n  end"\
+"#{flavor_targets}"\
 "\nend"\
 "\n"
 

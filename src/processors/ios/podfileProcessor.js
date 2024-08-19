@@ -21,9 +21,10 @@ async function IosPodfileProcessor(podfilePath, config) {
   }
 
   const rubyScript = `${__dirname}/scripts/modify_podfile.rb`;
+  const target_flavors = config.flavors.map((flavor) => flavor.flavorName);
   const processModifyPodfile = spawnSync(
     "ruby",
-    [rubyScript, podfileFilePath, projectName],
+    [rubyScript, podfileFilePath, projectName, target_flavors],
     { stdio: "inherit", shell: true }
   );
 
