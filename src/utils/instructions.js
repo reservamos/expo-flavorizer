@@ -13,6 +13,7 @@ const IosBuildConfigurationsProcessor = require("../processors/ios/buildConfigur
 const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosXcConfigProcessor = require("../processors/ios/xcConfigProcessor");
+const IosPlistProcessor = require("../processors/ios/plistProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -108,7 +109,13 @@ async function applyInstructions(configFilePath) {
         }
         break;
       case "ios:plist":
-        // console.log("Updating plist...");
+        try {
+          console.log("Updating plist...");
+          await IosPlistProcessor(config);
+          console.log(`✅ Plist updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating plist:", error, "\n");
+        }
         break;
       case "ios:icons":
         try {
