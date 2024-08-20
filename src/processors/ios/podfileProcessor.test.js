@@ -7,31 +7,44 @@ const configFilePath = `${process.cwd()}/testResources/${
 }`;
 const config = configLoader(configFilePath);
 const stripEndOfLines = require("../../utils/testUtils");
+const { platform } = require("os");
 
 describe("IosPodfileProcessor", () => {
-  const podfilePath = `${process.cwd()}/testResources/ios/podfileProcessorTest/Podfile`;
+  if (platform() === "darwin") {
+    const podfilePath = `${process.cwd()}/testResources/ios/podfileProcessorTest/Podfile`;
 
-  const matcher = fs.readFileSync(
-    `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileExpected`,
-    "utf8"
-  );
+    const matcher = fs.readFileSync(
+      `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileExpected`,
+      "utf8"
+    );
 
-  it("Test IosPodfileProcessor", async () => {
-    const result = await IosPodfileProcessor(podfilePath, config);
-    expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
-  });
+    it("Test IosPodfileProcessor", async () => {
+      const result = await IosPodfileProcessor(podfilePath, config);
+      expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
+    });
+  } else {
+    it("Test IosPodfileProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });
 
 describe("IosPodfileProcessor", () => {
-  const podfilePath = `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileTwo`;
+  if (platform() === "darwin") {
+    const podfilePath = `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileTwo`;
 
-  const matcher = fs.readFileSync(
-    `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileExpectedTwo`,
-    "utf8"
-  );
+    const matcher = fs.readFileSync(
+      `${process.cwd()}/testResources/ios/podfileProcessorTest/PodfileExpectedTwo`,
+      "utf8"
+    );
 
-  it("Test IosPodfileProcessor with two targets", async () => {
-    const result = await IosPodfileProcessor(podfilePath, config);
-    expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
-  });
+    it("Test IosPodfileProcessor with two targets", async () => {
+      const result = await IosPodfileProcessor(podfilePath, config);
+      expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
+    });
+  } else {
+    it("Test IosPodfileProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });

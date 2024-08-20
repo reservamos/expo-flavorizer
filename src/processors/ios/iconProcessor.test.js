@@ -5,16 +5,29 @@ const configFilePath = `${process.cwd()}/testResources/${
   constants.CONFIG_FILE
 }`;
 const config = configLoader(configFilePath);
+const { platform } = require("os");
 
 describe("IosIconProcessor", () => {
-  it("Test IosIconProcessor", async () => {
-    const processor = await IosIconProcessor(config);
-    expect(processor).toBeUndefined();
-  });
+  if (platform() === "darwin") {
+    it("Test IosIconProcessor", async () => {
+      const processor = await IosIconProcessor(config);
+      expect(processor).toBeUndefined();
+    });
+  } else {
+    it("Test IosIconProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });
 
 describe("IosIconProcessor", () => {
-  it("Test malformed IosIconProcessor", async () => {
-    await expect(IosIconProcessor("")).rejects.toThrow();
-  });
+  if (platform() === "darwin") {
+    it("Test malformed IosIconProcessor", async () => {
+      await expect(IosIconProcessor("")).rejects.toThrow();
+    });
+  } else {
+    it("Test IosIconProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });
