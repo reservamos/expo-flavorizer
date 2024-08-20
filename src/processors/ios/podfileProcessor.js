@@ -20,15 +20,19 @@ async function IosPodfileProcessor(podfilePath, config) {
     podfileFilePath = podfilePath;
   }
 
-  const rubyScript = `${__dirname}/scripts/modify_podfile.rb`;
   const target_flavors = config.flavors.map((flavor) => flavor.flavorName);
-  const processModifyPodfile = spawnSync(
-    "ruby",
-    [rubyScript, podfileFilePath, projectName, target_flavors],
-    { stdio: "inherit", shell: true }
-  );
 
-  return fs.readFileSync(podfileFilePath, "utf8");
+  const input = fs.readFileSync(podfileFilePath, "utf8");
+
+  // trim podfile until the first target
+  const targetBlocks = initialBlock.split("target");
+  const initialBlock = targetBlocks[0];
+
+  // trim podfile starting from the second target found to the end of file
+  const finalBlock = targetBlocks.slice(1).join("target");
+
+  const newPodfile = `${initialBlock}+${finalBlock}`;
+  return newPodfile;
 }
 
 module.exports = IosPodfileProcessor;

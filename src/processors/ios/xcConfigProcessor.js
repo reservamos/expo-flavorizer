@@ -47,7 +47,7 @@ async function generateXcConfigFile(flavor, buildSettings, flavorXcConfigPath) {
     flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
 
   buffer.push(`FLAVOR_ASSET_PREFIX=${capitalizedFlavorName}`);
-  buffer.push(`FLAVOR_NAME=${flavor.flavorName}`);
+  buffer.push(`FLAVOR_BUNDLE_NAME=${flavor.flavorName}`);
   buffer.push(`FLAVOR_DISPLAY_NAME=${flavor.appName}`);
   buffer.push(`FLAVOR_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
   buffer.push("");
