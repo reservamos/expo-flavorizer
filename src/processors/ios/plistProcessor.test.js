@@ -21,3 +21,13 @@ describe("IosPlistProcessor", () => {
     expect(stripEndOfLines(result)).toEqual(stripEndOfLines(matcher));
   });
 });
+
+describe("IosPlistProcessor", () => {
+  const plistPath = `${process.cwd()}/testResources/ios/plistProcessorTest/Malformed.plist`;
+
+  describe("IosPlistProcessor", () => {
+    it("Test malformed IosPlistProcessor", async () => {
+      await expect(IosPlistProcessor(plistPath, config)).rejects.toThrow();
+    });
+  });
+});

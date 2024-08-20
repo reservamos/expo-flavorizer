@@ -1,5 +1,4 @@
 const fs = require("fs");
-const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 const {
   validateIosFolder,
   validateXcodeProj,
@@ -20,72 +19,44 @@ async function IosPlistProcessor(plistPath, config) {
     plistFilePath = plistPath;
   }
 
-  const input = fs.readFileSync(plistFilePath, "utf8");
+  let input = fs.readFileSync(plistFilePath, "utf8");
 
-  const xmlParser = new XMLParser({
-    format: true,
-    ignoreAttributes: false,
-    suppressUnpairedNode: false,
-    parseNodeValue: false,
-    preserveOrder: true,
-    htmlEntities: true,
-    ignoreDeclaration: false,
-    processEntities: false,
-    stopNodes: ["!DOCTYPE"],
-    unpairedTags: ["true", "false"],
-  });
-  const xml = xmlParser.parse(input);
+  const plistValues = {
+    CFBundleDisplayName: "$(BUNDLE_DISPLAY_NAME)",
+    CFBundleIdentifier: "$(PRODUCT_BUNDLE_IDENTIFIER)",
+    CFBundleName: "$(PRODUCT_NAME)",
+  };
 
-  console.log(JSON.stringify(xml, null, 2));
-
-  //   iterate over xml objects and find the object that contains the key CFBundleIdentifier
-  //   and change the value to the new value
-  //   {
-  // "key": [
-  //     {
-  //       "#text": "CFBundleName"
-  //     }
-  //   ]
-  // },
-  // {
-  //   "string": [
-  //     {
-  //       "#text": "example"
-  //     }
-  //   ]
-  // },
-
-  for (const key of xml.plist.dict.key) {
-    if (key["#text"] === "CFBundleIdentifier") {
-      for (const string of xml.plist.dict.string) {
-        if (string["#text"] === "com.example.app") {
-          string["#text"] = "com.example.app2";
-        }
-      }
-    }
+  for (const key in plistValues) {
+    input = replacePlistValue(input, key, plistValues[key]);
   }
 
-  const xmlBuilder = new XMLBuilder({
-    format: true,
-    ignoreAttributes: false,
-    suppressUnpairedNode: false,
-    parseNodeValue: false,
-    preserveOrder: true,
-    htmlEntities: true,
-    ignoreDeclaration: false,
-    processEntities: false,
-    stopNodes: ["!DOCTYPE"],
-    unpairedTags: ["true", "false"],
-  });
+  return input;
+}
 
-  const xmlOutput = xmlBuilder.build(xml);
-
-  if (!XMLValidator.validate(xmlOutput)) {
-    throw new Error("MalformedOutputException");
+function replacePlistValue(input, key, value) {
+  // find the key
+  const plistKey = input.match(new RegExp(`<key>${key}</key>`));
+  if (!plistKey) {
+    throw new Error(`${key}NotFound`);
   }
 
-  return xmlOutput;
-  //   fs.writeFileSync(plistPath, xmlOutput);
+  // find the current value
+  const plistValue = input.match(
+    new RegExp(`<key>${key}</key>\\s*<string>(.*)</string>`)
+  );
+
+  if (!plistValue) {
+    throw new Error(`${key}ValueNotFound`);
+  }
+
+  // replace the new value
+  const newPlist = input.replace(
+    plistValue[0],
+    `<key>${key}</key>\n    <string>${value}</string>`
+  );
+
+  return newPlist;
 }
 
 module.exports = IosPlistProcessor;
