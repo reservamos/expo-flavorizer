@@ -15,7 +15,7 @@ async function IosPodfileProcessor(podfilePath, config) {
 
   let podfileFilePath = "";
   if (!podfilePath) {
-    podfileFilePath = `${process.cwd()}/ios/${projectName}/Podfile`;
+    podfileFilePath = `${process.cwd()}/ios/Podfile`;
   } else {
     podfileFilePath = podfilePath;
   }

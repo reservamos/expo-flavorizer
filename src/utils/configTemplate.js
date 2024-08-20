@@ -47,6 +47,7 @@ function configTemplate() {
       "android:icons",
       "android:splashScreen",
       "ios:xcconfig",
+      "ios:podfile",
       "ios:buildTargets",
       "ios:plist",
       "ios:icons",

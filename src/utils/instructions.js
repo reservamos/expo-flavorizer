@@ -10,6 +10,7 @@ const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
 const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
 const IosBuildConfigurationsProcessor = require("../processors/ios/buildConfigurationsProcessor");
+const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosXcConfigProcessor = require("../processors/ios/xcConfigProcessor");
 
@@ -44,13 +45,13 @@ async function applyInstructions(configFilePath) {
             `${process.cwd()}/android/app/build.gradle`,
             "utf8"
           );
-          const upadtedBuildGradle = await AndroidBuildGradleProcessor(
+          const updatedBuildGradle = await AndroidBuildGradleProcessor(
             buildGradle,
             config
           );
           fs.writeFileSync(
             `${process.cwd()}/android/app/build.gradle`,
-            upadtedBuildGradle
+            updatedBuildGradle
           );
           console.log(`✅ build.gradle updated!\n`);
         } catch (error) {
@@ -86,6 +87,15 @@ async function applyInstructions(configFilePath) {
           console.log(`✅ XcConfig updated!\n`);
         } catch (error) {
           console.error("❌ Error updating xcconfig:", error, "\n");
+        }
+        break;
+      case "ios:podfile":
+        try {
+          console.log("Updating podfile...");
+          await IosPodfileProcessor(null, config);
+          console.log(`✅ Podfile updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating podfile:", error, "\n");
         }
         break;
       case "ios:buildTargets":

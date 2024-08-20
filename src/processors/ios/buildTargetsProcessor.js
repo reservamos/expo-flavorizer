@@ -30,7 +30,32 @@ async function IosBuildTargetsProcessor(config) {
       [rubyScript, xcodeProjPath, projectName, flavorName, buildSettingsBase64],
       { stdio: "inherit" }
     );
+
+    console.log(`✅ Flavor ${flavorName} added to Xcode project`);
   }
+
+  console.log("\n🧹 Cleaning previous pods project...");
+  const processCleanPods = spawnSync("rm", ["-rf", "Pods", "Podfile.lock"], {
+    stdio: "inherit",
+    shell: true,
+    cwd: `${process.cwd()}/ios`,
+  });
+
+  console.log("\n🧹 Cleaning previous xcode project...");
+  const processCleanXcodeBuild = spawnSync(
+    "xattr -w com.apple.xcode.CreatedByBuildSystem true ./ios/build && cd ios && xcodebuild clean",
+    [],
+    {
+      stdio: "inherit",
+      shell: true,
+    }
+  );
+
+  console.log("\n🚀 Updating pods project...\n");
+  const processUpdatePods = spawnSync("npx", ["pod-install"], {
+    stdio: "inherit",
+    shell: true,
+  });
 }
 
 module.exports = IosBuildTargetsProcessor;
