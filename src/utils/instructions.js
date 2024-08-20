@@ -93,7 +93,8 @@ async function applyInstructions(configFilePath) {
       case "ios:podfile":
         try {
           console.log("Updating podfile...");
-          await IosPodfileProcessor(null, config);
+          const updatedPodfile = await IosPodfileProcessor(null, config);
+          fs.writeFileSync(`${process.cwd()}/ios/Podfile`, updatedPodfile);
           console.log(`✅ Podfile updated!\n`);
         } catch (error) {
           console.error("❌ Error updating podfile:", error, "\n");
