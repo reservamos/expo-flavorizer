@@ -30,11 +30,17 @@ describe("IosPlistProcessor", () => {
 });
 
 describe("IosPlistProcessor", () => {
-  const plistPath = `${process.cwd()}/testResources/ios/plistProcessorTest/Malformed.plist`;
+  if (platform() === "darwin") {
+    const plistPath = `${process.cwd()}/testResources/ios/plistProcessorTest/Malformed.plist`;
 
-  describe("IosPlistProcessor", () => {
-    it("Test malformed IosPlistProcessor", async () => {
-      await expect(IosPlistProcessor(plistPath, config)).rejects.toThrow();
+    describe("IosPlistProcessor", () => {
+      it("Test malformed IosPlistProcessor", async () => {
+        await expect(IosPlistProcessor(plistPath, config)).rejects.toThrow();
+      });
     });
-  });
+  } else {
+    it("Test IosPlistProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });

@@ -21,55 +21,35 @@ async function IosXcConfigProcessor(config) {
     const rubyScript = `${__dirname}/scripts/add_file.rb`;
     const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
 
-    const buildtargets = ["Debug", "Release"];
+    const flavorXcConfig = `${flavorName}.xcconfig`;
+    const flavorXcConfigPath = `${process.cwd()}/ios/${projectName}/${flavorXcConfig}`;
+    const referencePath = `${projectName}/${flavorXcConfig}`;
 
-    for (const buildtarget of buildtargets) {
-      const flavorXcConfig = `${flavorName}${buildtarget}.xcconfig`;
-      const flavorXcConfigPath = `${process.cwd()}/ios/${projectName}/${flavorXcConfig}`;
-      const referencePath = `${projectName}/${flavorXcConfig}`;
+    await generateXcConfigFile(flavor, flavorBuildSettings, flavorXcConfigPath);
 
-      await generateXcConfigFile(
-        buildtarget,
+    const processCreateScheme = spawnSync(
+      "ruby",
+      [
+        rubyScript,
+        xcodeProjPath,
+        flavorXcConfigPath,
         projectName,
-        flavor,
-        flavorBuildSettings,
-        flavorXcConfigPath
-      );
-
-      const processCreateScheme = spawnSync(
-        "ruby",
-        [
-          rubyScript,
-          xcodeProjPath,
-          flavorXcConfigPath,
-          projectName,
-          referencePath,
-        ],
-        { stdio: "inherit" }
-      );
-    }
+        referencePath,
+      ],
+      { stdio: "inherit" }
+    );
   }
 }
 
-async function generateXcConfigFile(
-  buildTarget,
-  projectName,
-  flavor,
-  buildSettings,
-  flavorXcConfigPath
-) {
+async function generateXcConfigFile(flavor, buildSettings, flavorXcConfigPath) {
   let buffer = [];
   const capitalizedFlavorName =
     flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
 
-  buffer.push(
-    `#include? "Pods/Target Support Files/Pods-${projectName}/Pods-${projectName}.${buildTarget.toLowerCase()}.xcconfig"`
-  );
-  buffer.push("");
-  buffer.push(`ASSET_PREFIX=${capitalizedFlavorName}`);
-  buffer.push(`PRODUCT_NAME=${flavor.flavorName}`);
-  buffer.push(`PRODUCT_DISPLAY_NAME=${flavor.appName}`);
-  buffer.push(`PRODUCT_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
+  buffer.push(`FLAVOR_ASSET_PREFIX=${capitalizedFlavorName}`);
+  buffer.push(`FLAVOR_NAME=${flavor.flavorName}`);
+  buffer.push(`FLAVOR_DISPLAY_NAME=${flavor.appName}`);
+  buffer.push(`FLAVOR_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
   buffer.push("");
 
   for (const [key, value] of Object.entries(buildSettings)) {

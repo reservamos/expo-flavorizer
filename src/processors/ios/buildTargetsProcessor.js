@@ -20,6 +20,9 @@ async function IosBuildTargetsProcessor(config) {
     const rubyScript = `${__dirname}/scripts/add_targets.rb`;
     const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
 
+    const flavorXcConfig = `${flavorName}.xcconfig`;
+    const flavorXcConfigFileReference = `${projectName}/${flavorXcConfig}`;
+
     const buildSettingsString = JSON.stringify(flavorBuildSettings);
     const buildSettingsBase64 = new Buffer.from(buildSettingsString).toString(
       "base64"
@@ -27,7 +30,14 @@ async function IosBuildTargetsProcessor(config) {
 
     const processCreateTargets = spawnSync(
       "ruby",
-      [rubyScript, xcodeProjPath, projectName, flavorName, buildSettingsBase64],
+      [
+        rubyScript,
+        xcodeProjPath,
+        flavorXcConfigFileReference,
+        projectName,
+        flavorName,
+        buildSettingsBase64,
+      ],
       { stdio: "inherit" }
     );
 
