@@ -31,6 +31,8 @@ async function IosPlistProcessor(plistPath, config) {
     input = replacePlistValue(input, key, plistValues[key]);
   }
 
+  fs.writeFileSync(plistFilePath, input);
+
   return input;
 }
 

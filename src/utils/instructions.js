@@ -111,7 +111,7 @@ async function applyInstructions(configFilePath) {
       case "ios:plist":
         try {
           console.log("Updating plist...");
-          await IosPlistProcessor(config);
+          await IosPlistProcessor(null, config);
           console.log(`✅ Plist updated!\n`);
         } catch (error) {
           console.error("❌ Error updating plist:", error, "\n");
