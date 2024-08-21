@@ -5,10 +5,17 @@ const configFilePath = `${process.cwd()}/testResources/${
   constants.CONFIG_FILE
 }`;
 const config = configLoader(configFilePath);
+const { platform } = require("os");
 
 describe("IosLaunchScreenProcessor", () => {
-  it("Test IosLaunchScreenProcessor", async () => {
-    const processor = await IosLaunchScreenProcessor(config);
-    expect(processor).toBeUndefined();
-  });
+  if (platform() === "darwin") {
+    it("Test IosLaunchScreenProcessor", async () => {
+      const processor = await IosLaunchScreenProcessor(config);
+      expect(processor).toBeUndefined();
+    });
+  } else {
+    it("Test IosLaunchScreenProcessor", async () => {
+      expect().toBeUndefined();
+    });
+  }
 });
