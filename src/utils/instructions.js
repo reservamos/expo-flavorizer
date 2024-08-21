@@ -9,20 +9,15 @@ const AndroidSplashScreenProcessor = require("../processors/android/splashScreen
 const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
 const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
+const IosBuildConfigurationsProcessor = require("../processors/ios/buildConfigurationsProcessor");
+const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosXcConfigProcessor = require("../processors/ios/xcConfigProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
   for (const instruction of config.instructions) {
-    // apply the instruction
     switch (instruction) {
-      case "assets:download":
-        // console.log("Downloading assets...");
-        break;
-      case "assets:extract":
-        // console.log("Extracting assets...");
-        break;
       case "android:androidManifest":
         try {
           console.log("Updating AndroidManifest...");
@@ -50,21 +45,18 @@ async function applyInstructions(configFilePath) {
             `${process.cwd()}/android/app/build.gradle`,
             "utf8"
           );
-          const upadtedBuildGradle = await AndroidBuildGradleProcessor(
+          const updatedBuildGradle = await AndroidBuildGradleProcessor(
             buildGradle,
             config
           );
           fs.writeFileSync(
             `${process.cwd()}/android/app/build.gradle`,
-            upadtedBuildGradle
+            updatedBuildGradle
           );
           console.log(`✅ build.gradle updated!\n`);
         } catch (error) {
           console.error("❌ Error updating build.gradle:", error, "\n");
         }
-        break;
-      case "android:dummyAssets":
-        // console.log("Adding dummy assets...");
         break;
       case "android:icons":
         try {
@@ -88,21 +80,6 @@ async function applyInstructions(configFilePath) {
           console.error("❌ Error updating splash screen:", error, "\n");
         }
         break;
-      case "reactnative:flavors":
-        // console.log("Updating flavors...");
-        break;
-      case "reactnative:app":
-        // console.log("Updating app...");
-        break;
-      case "reactnative:pages":
-        // console.log("Updating pages...");
-        break;
-      case "reactnative:main":
-        // console.log("Updating main...");
-        break;
-      case "reactnative:targets":
-        // console.log("Updating targets...");
-        break;
       case "ios:xcconfig":
         try {
           console.log("Updating xcconfig...");
@@ -110,6 +87,15 @@ async function applyInstructions(configFilePath) {
           console.log(`✅ XcConfig updated!\n`);
         } catch (error) {
           console.error("❌ Error updating xcconfig:", error, "\n");
+        }
+        break;
+      case "ios:podfile":
+        try {
+          console.log("Updating podfile...");
+          await IosPodfileProcessor(null, config);
+          console.log(`✅ Podfile updated!\n`);
+        } catch (error) {
+          console.error("❌ Error updating podfile:", error, "\n");
         }
         break;
       case "ios:buildTargets":
@@ -121,17 +107,8 @@ async function applyInstructions(configFilePath) {
           console.error("❌ Error updating buildTargets:", error, "\n");
         }
         break;
-      case "ios:schema":
-        try {
-          console.log("Updating schemas...");
-          await IosSchemasProcessor(config);
-          console.log(`✅ Schemas updated!\n`);
-        } catch (error) {
-          console.error("❌ Error updating schemas:", error, "\n");
-        }
-        break;
-      case "ios:dummyAssets":
-        // console.log("Adding dummy assets...");
+      case "ios:plist":
+        // console.log("Updating plist...");
         break;
       case "ios:icons":
         try {
@@ -142,9 +119,6 @@ async function applyInstructions(configFilePath) {
           console.error("❌ Error updating iOS icons:", error, "\n");
         }
         break;
-      case "ios:plist":
-        // console.log("Updating plist...");
-        break;
       case "ios:launchScreen":
         try {
           console.log("Updating launchScreen...");
@@ -153,15 +127,6 @@ async function applyInstructions(configFilePath) {
         } catch (error) {
           console.error("❌ Error updating launchScreen:", error, "\n");
         }
-        break;
-      case "google:firebase":
-        // console.log("Updating firebase...");
-        break;
-      case "assets:clean":
-        // console.log("Cleaning assets...");
-        break;
-      case "ide:config":
-        // console.log("Updating ide config...");
         break;
     }
   }
