@@ -26,13 +26,16 @@ flavor_scheme.add_build_target(flavor_target)
 flavor_scheme.set_launch_target(flavor_target)
 flavor_scheme.save_as(project_path, flavor, true)
 
-# find xcconfig file
-xcconfig_file = project.files.detect { |file| file.path == xcconfig_reference }
-
 # copy build_configurations
 flavor_target.build_configurations.map do |item|
   item.build_settings.update(base_target.build_settings(item.name))
-  item.base_configuration_reference = xcconfig_file
+  # find xcconfig file by build mode [debug, release]
+  if item.name == 'Debug'
+    item.base_configuration_reference = project.files.detect { |file| file.path == "#{project_name}/#{flavor}Debug.xcconfig" }
+  elsif item.name == 'Release'
+    item.base_configuration_reference = project.files.detect { |file| file.path == "#{project_name}/#{flavor}Release.xcconfig" }
+  end
+  item.build_settings = item.build_settings.merge(additional_build_settings)
 end
 
 # copy build_phases

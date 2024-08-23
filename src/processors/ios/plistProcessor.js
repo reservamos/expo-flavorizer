@@ -25,7 +25,7 @@ async function IosPlistProcessor(plistPath, config) {
     CFBundleDisplayName: "$(FLAVOR_DISPLAY_NAME)",
     CFBundleIdentifier: "$(FLAVOR_BUNDLE_IDENTIFIER)",
     CFBundleName: "$(FLAVOR_BUNDLE_NAME)",
-    UILaunchStoryboardName: "$(FLAVOR_ASSET_PREFIX)LaunchScreen",
+    UILaunchStoryboardName: "$(FLAVOR_SPLASH_SCREEN)",
   };
 
   for (const key in plistValues) {
