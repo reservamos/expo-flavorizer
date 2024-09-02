@@ -81,15 +81,15 @@ async function applyInstructions(configFilePath) {
           console.error("❌ Error updating splash screen:", error, "\n");
         }
         break;
-      case "ios:xcconfig":
-        try {
-          console.log("Updating xcconfig...");
-          await IosXcConfigProcessor(config);
-          console.log(`✅ XcConfig updated!\n`);
-        } catch (error) {
-          console.error("❌ Error updating xcconfig:", error, "\n");
-        }
-        break;
+      // case "ios:xcconfig":
+      //   try {
+      //     console.log("Updating xcconfig...");
+      //     await IosXcConfigProcessor(config);
+      //     console.log(`✅ XcConfig updated!\n`);
+      //   } catch (error) {
+      //     console.error("❌ Error updating xcconfig:", error, "\n");
+      //   }
+      //   break;
       case "ios:podfile":
         try {
           console.log("Updating podfile...");
