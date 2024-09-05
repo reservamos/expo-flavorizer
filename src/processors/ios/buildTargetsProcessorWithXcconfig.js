@@ -13,21 +13,15 @@ async function IosBuildTargetsProcessor(config) {
   validateXcodeProj();
 
   for (const flavor of config.flavors) {
-    const { flavorName, appName, ios } = flavor;
-    const capitalizedFlavorName =
-      flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
+    const { flavorName, ios } = flavor;
 
-    const flavorBuildSettings = {
-      ...flavor.buildSettings,
-      FLAVOR_ASSET_PREFIX: capitalizedFlavorName,
-      FLAVOR_BUNDLE_NAME: flavorName,
-      FLAVOR_DISPLAY_NAME: appName,
-      FLAVOR_BUNDLE_IDENTIFIER: ios.bundleId,
-      FLAVOR_SPLASH_SCREEN: `SplashScreen${capitalizedFlavorName}`,
-    };
+    const flavorBuildSettings = flavor.buildSettings ?? {};
 
     const rubyScript = `${__dirname}/scripts/add_targets.rb`;
     const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
+
+    const flavorXcConfig = `${flavorName}.xcconfig`;
+    const flavorXcConfigFileReference = `${projectName}/${flavorXcConfig}`;
 
     const buildSettingsString = JSON.stringify(flavorBuildSettings);
     const buildSettingsBase64 = new Buffer.from(buildSettingsString).toString(
@@ -36,7 +30,14 @@ async function IosBuildTargetsProcessor(config) {
 
     const processCreateTargets = spawnSync(
       "ruby",
-      [rubyScript, xcodeProjPath, projectName, flavorName, buildSettingsBase64],
+      [
+        rubyScript,
+        xcodeProjPath,
+        flavorXcConfigFileReference,
+        projectName,
+        flavorName,
+        buildSettingsBase64,
+      ],
       { stdio: "inherit" }
     );
 

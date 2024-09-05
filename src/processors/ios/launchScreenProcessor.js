@@ -32,7 +32,7 @@ async function IosLaunchScreenProcessor(config) {
 
       const capitalizedFlavorName =
         flavorName.charAt(0).toUpperCase() + flavorName.slice(1);
-      const flavorLaunchScreen = `${capitalizedFlavorName}LaunchScreen.storyboard`;
+      const flavorLaunchScreen = `SplashScreen${capitalizedFlavorName}.storyboard`;
       const flavorLaunchScreenPath = `${process.cwd()}/ios/${projectName}/${flavorLaunchScreen}`;
 
       await generateBackgroundImage(

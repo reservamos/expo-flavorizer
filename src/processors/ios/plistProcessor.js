@@ -22,9 +22,10 @@ async function IosPlistProcessor(plistPath, config) {
   let input = fs.readFileSync(plistFilePath, "utf8");
 
   const plistValues = {
-    CFBundleDisplayName: "$(BUNDLE_DISPLAY_NAME)",
-    CFBundleIdentifier: "$(PRODUCT_BUNDLE_IDENTIFIER)",
-    CFBundleName: "$(PRODUCT_NAME)",
+    CFBundleDisplayName: "$(FLAVOR_DISPLAY_NAME)",
+    CFBundleIdentifier: "$(FLAVOR_BUNDLE_IDENTIFIER)",
+    CFBundleName: "$(FLAVOR_BUNDLE_NAME)",
+    UILaunchStoryboardName: "$(FLAVOR_SPLASH_SCREEN)",
   };
 
   for (const key in plistValues) {
