@@ -27,7 +27,7 @@ describe("AndroidManifestProcessor", () => {
 describe("AndroidManifestProcessor", () => {
   it("Test malformed AndroidManifestProcessor", () => {
     expect(() => {
-      AndroidBuildGradleProcessor("", config);
+      AndroidManifestProcessor("", config);
     }).toThrow();
   });
 });

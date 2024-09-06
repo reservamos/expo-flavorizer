@@ -97,18 +97,11 @@
     "android:buildGradle",
     "android:icons",
     "android:splashScreen",
-    "reactnative:flavors",
-    "reactnative:app",
-    "reactnative:pages",
-    "reactnative:main",
-    "reactnative:targets",
     "ios:xcconfig",
+    "ios:podfile",
     "ios:buildTargets",
-    "ios:schema",
-    "ios:icons",
     "ios:plist",
-    "ios:launchScreen",
-    "google:firebase",
-    "ide:config"
+    "ios:icons",
+    "ios:launchScreen"
   ]
 }
