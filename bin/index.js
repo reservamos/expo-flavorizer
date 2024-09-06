@@ -14,7 +14,7 @@ const removeFlavorAction = require("../src/actions/removeFlavorAction");
 program
   .name("flavorizer")
   .version("1.0.0")
-  .description("React Native Flavorizer CLI")
+  .description("Expo Flavorizer CLI")
   .exitOverride((_) => {
     process.exit(0);
   });
@@ -42,7 +42,7 @@ program
 
 program
   .command("apply")
-  .description("Apply all changes to the react native project")
+  .description("Apply all changes to the expo project")
   .action(bootstrap(applyAction));
 
 program.parse(process.argv);

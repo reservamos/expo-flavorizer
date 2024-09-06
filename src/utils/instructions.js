@@ -8,11 +8,8 @@ const AndroidAdaptiveIconProcessor = require("../processors/android/adaptiveIcon
 const AndroidSplashScreenProcessor = require("../processors/android/splashScreenProcessor");
 const IosIconProcessor = require("../processors/ios/iconProcessor");
 const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcessor");
-const IosSchemasProcessor = require("../processors/ios/schemasProcessor");
-const IosBuildConfigurationsProcessor = require("../processors/ios/buildConfigurationsProcessor");
 const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
-const IosXcConfigProcessor = require("../processors/ios/xcConfigProcessor");
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
 
 async function applyInstructions(configFilePath) {
@@ -81,15 +78,6 @@ async function applyInstructions(configFilePath) {
           console.error("❌ Error updating splash screen:", error, "\n");
         }
         break;
-      // case "ios:xcconfig":
-      //   try {
-      //     console.log("Updating xcconfig...");
-      //     await IosXcConfigProcessor(config);
-      //     console.log(`✅ XcConfig updated!\n`);
-      //   } catch (error) {
-      //     console.error("❌ Error updating xcconfig:", error, "\n");
-      //   }
-      //   break;
       case "ios:podfile":
         try {
           console.log("Updating podfile...");
