@@ -46,12 +46,11 @@ function configTemplate() {
       "android:buildGradle",
       "android:icons",
       "android:splashScreen",
-      "ios:xcconfig",
+      "ios:icons",
+      "ios:launchScreen",
       "ios:podfile",
       "ios:buildTargets",
       "ios:plist",
-      "ios:icons",
-      "ios:launchScreen",
     ],
   };
 }

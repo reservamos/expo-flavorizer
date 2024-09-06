@@ -85,26 +85,14 @@
     }
   ],
   "instructions": [
-    "assets:download",
-    "assets:extract",
     "android:androidManifest",
     "android:buildGradle",
-    "android:dummyAssets",
     "android:icons",
-    "reactnative:flavors",
-    "reactnative:app",
-    "reactnative:pages",
-    "reactnative:main",
-    "reactnative:targets",
-    "ios:xcconfig",
-    "ios:buildTargets",
-    "ios:schema",
-    "ios:dummyAssets",
+    "android:splashScreen",
     "ios:icons",
-    "ios:plist",
     "ios:launchScreen",
-    "google:firebase",
-    "assets:clean",
-    "ide:config"
+    "ios:podfile",
+    "ios:buildTargets",
+    "ios:plist"
   ]
 }
