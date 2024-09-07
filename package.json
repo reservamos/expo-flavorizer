@@ -1,6 +1,6 @@
 {
   "name": "@reservamos/expo-flavorizer",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "author": "Reservamos",
   "description": "Flavorizer is a tool to generate different versions of your app based on a configuration file.",
   "repository": "https://github.com/reservamos/expo-flavorizer",
