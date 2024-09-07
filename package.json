@@ -1,6 +1,9 @@
 {
-  "name": "expo-flavorizer",
+  "name": "@reservamos/expo-flavorizer",
   "version": "1.0.0-beta.0",
+  "author": "Reservamos",
+  "description": "Flavorizer is a tool to generate different versions of your app based on a configuration file.",
+  "repository": "https://github.com/reservamos/expo-flavorizer",
   "license": "MIT",
   "bin": {
     "flavorizer": "bin/index.js"
@@ -21,5 +24,8 @@
   },
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

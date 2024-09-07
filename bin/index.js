@@ -2,6 +2,7 @@
 
 const { Command } = require("commander");
 const chalk = require("chalk");
+const fs = require("fs");
 const program = new Command();
 
 const bootstrap = require("../src/utils/bootstrap");
@@ -10,11 +11,12 @@ const listAction = require("../src/actions/listAction");
 const applyAction = require("../src/actions/applyAction");
 const addFlavorAction = require("../src/actions/addFlavorAction");
 const removeFlavorAction = require("../src/actions/removeFlavorAction");
+const version = require("../package.json").version;
 
 program
   .name("flavorizer")
-  .version("1.0.0")
-  .description("Expo Flavorizer CLI")
+  .version(version)
+  .description("Expo Flavorizer by Reservamos")
   .exitOverride((_) => {
     process.exit(0);
   });

@@ -30,13 +30,13 @@ This package is intended to support development of react native projects. In
 general, you can install it globally using:
 
 ```shell
-yarn global add expo-flavorizer
+yarn global add @reservamos/expo-flavorizer
 ```
 
 or using `NPM`
 
 ```shell
-npm -g install expo-flavorizer
+npm -g install @reservamos/expo-flavorizer
 ```
 
 ## Create your flavors
