@@ -29,6 +29,8 @@ async function IosLaunchScreenProcessor(config) {
 
     if (launchScreen) {
       console.log("Creating LaunchScreen for flavor", flavorName);
+      const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
+        launchScreen;
 
       const capitalizedFlavorName =
         flavorName.charAt(0).toUpperCase() + flavorName.slice(1);
@@ -38,13 +40,16 @@ async function IosLaunchScreenProcessor(config) {
       await generateBackgroundImage(
         capitalizedFlavorName,
         projectName,
-        launchScreen.backgroundColor
+        backgroundColor
       );
 
       await generateLogo(
         capitalizedFlavorName,
         projectName,
-        launchScreen.image
+        image,
+        imageScale,
+        imageWidth,
+        imageHeight
       );
 
       //  create launch screen file from template
@@ -61,6 +66,8 @@ async function IosLaunchScreenProcessor(config) {
       nunjucks.configure({ autoescape: true });
       const launchScreenTemplate = nunjucks.renderString(launchScreenContent, {
         IMAGE: `${capitalizedFlavorName}LaunchImage`,
+        IMAGE_WIDTH: imageWidth ?? 1024,
+        IMAGE_HEIGHT: imageHeight ?? 1024,
         BACKGROUND: `${capitalizedFlavorName}LaunchBackground`,
       });
 
@@ -133,7 +140,14 @@ async function generateBackgroundImage(
   );
 }
 
-async function generateLogo(flavorName, projectName, imagePath) {
+async function generateLogo(
+  flavorName,
+  projectName,
+  imagePath,
+  imageScale,
+  imageWidth,
+  imageHeight
+) {
   const imageBuffer = fs.readFileSync(imagePath);
   const imagesetPath = `${process.cwd()}/ios/${projectName}/Images.xcassets/${flavorName}LaunchImage.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
@@ -145,10 +159,17 @@ async function generateLogo(flavorName, projectName, imagePath) {
     fs.mkdirSync(path.dirname(imageset), { recursive: true });
   }
 
+  // resize image based on width, height and scale
+  const prefferedScale = imageScale ?? 1.0;
+  const prefferedImageWidth = imageWidth ?? 1024;
+  const prefferedImageHeight = imageHeight ?? 1024;
+  const scaledWidth = Math.round(prefferedImageWidth * prefferedScale);
+  const scaledHeight = Math.round(prefferedImageHeight * prefferedScale);
+
   sharp({
     create: {
-      width: 3840,
-      height: 1080,
+      width: scaledWidth,
+      height: scaledHeight,
       channels: 4,
       background: { r: 255, g: 255, b: 255, alpha: 0 },
     },
