@@ -57,7 +57,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="{{IMAGE}}" width="3840" height="1080" />
+        <image name="{{IMAGE}}" width="{{IMAGE_WIDTH}}" height="{{IMAGE_HEIGHT}}" />
         <image name="{{BACKGROUND}}" width="1" height="1" />
     </resources>
 </document>
