@@ -19,16 +19,57 @@ base_target = project.targets.detect { |target| target.name == project_name }
 flavor_target = project.new_target(base_target.symbol_type, flavor, base_target.platform_name, base_target.deployment_target)
 flavor_target.product_name = flavor
 
-# create scheme
-# flavor_scheme = Xcodeproj::XCScheme.new
-# flavor_scheme.add_build_target(flavor_target)
-# flavor_scheme.set_launch_target(flavor_target)
-# flavor_scheme.save_as(project_path, flavor, true)
+# Ensure Flavors group exists
+flavors_group = project.main_group.find_subpath('Flavors', true)
+
+# Check if flavor group already exists
+flavor_group = flavors_group.find_subpath(flavor, false)
+if flavor_group.nil?
+  # Create flavor group if it doesn't exist
+  flavor_group = flavors_group.new_group(flavor, flavor)
+  
+  # Add references to flavor-specific files if they exist
+  flavor_dir = File.join(File.dirname(project_path), flavor)
+  
+  if Dir.exist?(flavor_dir)
+    # Add common files we expect in flavor directories
+    [
+      "Debug-#{flavor}.entitlements", 
+      "Debug-#{flavor}.xcconfig", 
+      "Release-#{flavor}.entitlements",
+      "Release-#{flavor}.xcconfig",
+      "Info-#{flavor}.plist", 
+      "SplashScreen-#{flavor}.storyboard"
+    ].each do |filename|
+      file_path = File.join(flavor_dir, filename)
+      if File.exist?(file_path)
+        file_ref = flavor_group.new_reference(file_path)
+      end
+    end
+    
+    # Add assets catalog if it exists
+    assets_path = File.join(flavor_dir, "Images-#{flavor}.xcassets")
+    if File.exist?(assets_path)
+      assets_ref = flavor_group.new_reference(assets_path)
+    end
+  end
+end
 
 # copy build_configurations
 flavor_target.build_configurations.map do |item|
   item.build_settings.update(base_target.build_settings(item.name))
   item.build_settings = item.build_settings.merge(build_settings)
+  
+  # Set flavor-specific paths
+  if item.name == "Debug"
+    item.build_settings['CODE_SIGN_ENTITLEMENTS'] = "#{flavor}/Debug-#{flavor}.entitlements"
+    item.build_settings['INFOPLIST_FILE'] = "#{flavor}/Info-#{flavor}.plist"
+    item.build_settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = "AppIcon-#{flavor}"
+  elsif item.name == "Release"
+    item.build_settings['CODE_SIGN_ENTITLEMENTS'] = "#{flavor}/Release-#{flavor}.entitlements"
+    item.build_settings['INFOPLIST_FILE'] = "#{flavor}/Info-#{flavor}.plist"
+    item.build_settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = "AppIcon-#{flavor}"
+  end
 end
 
 # Remove default build phases that were automatically created
@@ -46,6 +87,17 @@ base_target.build_phases.each do |base_phase|
     resources_phase = flavor_target.resources_build_phase
     base_phase.files.each do |build_file|
       resources_phase.add_file_reference(build_file.file_ref) if build_file.file_ref
+    end
+    
+    # Add flavor-specific resources
+    if flavor_group
+      flavor_resources = flavor_group.files.select do |file|
+        ['.xcassets', '.storyboard', '.plist', '.xcconfig'].any? { |ext| file.path.end_with?(ext) }
+      end
+      
+      flavor_resources.each do |resource|
+        resources_phase.add_file_reference(resource)
+      end
     end
   when 'PBXFrameworksBuildPhase'
     frameworks_phase = flavor_target.frameworks_build_phase

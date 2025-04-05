@@ -1,4 +1,6 @@
 const { spawnSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
 const {
   validateIosFolder,
   validateXcodeProj,
@@ -12,10 +14,24 @@ async function IosBuildTargetsProcessor(config) {
   const projectName = validateIosFolder();
   validateXcodeProj();
 
+  // Create Flavors directory structure if it doesn't exist
+  const flavorsDirPath = path.join(process.cwd(), "ios", "Flavors");
+  if (!fs.existsSync(flavorsDirPath)) {
+    fs.mkdirSync(flavorsDirPath, { recursive: true });
+    console.log("✅ Created Flavors directory in iOS project");
+  }
+
   for (const flavor of config.flavors) {
     const { flavorName, appName, ios } = flavor;
     const capitalizedFlavorName =
       flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
+
+    // Create directory for this flavor if it doesn't exist
+    const flavorDirPath = path.join(flavorsDirPath, flavorName);
+    if (!fs.existsSync(flavorDirPath)) {
+      fs.mkdirSync(flavorDirPath, { recursive: true });
+      console.log(`✅ Created directory for flavor: ${flavorName}`);
+    }
 
     const flavorBuildSettings = {
       ...flavor.buildSettings,

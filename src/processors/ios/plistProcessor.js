@@ -37,7 +37,7 @@ async function IosPlistProcessor(plistPath, config) {
     }
 
     // Define the target plist path for this flavor
-    const flavorPlistFilePath = `${flavorDirPath}/Info.plist`;
+    const flavorPlistFilePath = `${flavorDirPath}/Info-${flavorName}.plist`;
 
     // Start with the original content
     let flavorPlistContent = originalPlistContent;

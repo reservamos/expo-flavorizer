@@ -39,18 +39,6 @@ async function IosXcConfigProcessor(config) {
       console.log(
         `✅ Created xcconfig file for flavor ${flavorName} and build mode ${buildMode}`
       );
-
-      const processCreateScheme = spawnSync(
-        "ruby",
-        [
-          rubyScript,
-          xcodeProjPath,
-          flavorXcConfigPath,
-          projectName,
-          referencePath,
-        ],
-        { stdio: "inherit" }
-      );
     }
   }
 }

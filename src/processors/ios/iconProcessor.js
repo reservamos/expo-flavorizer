@@ -45,7 +45,7 @@ async function IosIconProcessor(config) {
       },
     };
 
-    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/AppIcon.appiconset`;
+    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/AppIcon-${flavorName}.appiconset`;
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];

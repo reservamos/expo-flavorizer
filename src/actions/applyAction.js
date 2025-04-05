@@ -24,12 +24,12 @@ async function applyAction(options) {
     "android:buildGradle",
     "android:icons",
     "android:splashScreen",
-    "ios:buildTargets",
     "ios:entitlements",
     "ios:xcconfig",
     "ios:plist",
     "ios:icons",
     "ios:launchScreen",
+    "ios:buildTargets",
     "ios:podfile",
   ];
 

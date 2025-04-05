@@ -30,7 +30,7 @@ async function IosLaunchScreenProcessor(config) {
     if (launchScreen) {
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
-      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen.storyboard`;
+      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen-${flavorName}.storyboard`;
 
       await generateBackgroundImage(flavorName, backgroundColor);
 
@@ -44,7 +44,7 @@ async function IosLaunchScreenProcessor(config) {
 
       //  create launch screen file from template
       fs.copyFileSync(
-        path.join(__dirname, "assets", "LaunchScreen.storyboard"),
+        path.join(__dirname, "assets", `LaunchScreen.storyboard`),
         flavorLaunchScreenPath
       );
 
@@ -74,23 +74,23 @@ async function IosLaunchScreenProcessor(config) {
         `${projectName}.xcodeproj`
       );
       const referencePath = path.join(flavorName, "SplashScreen.storyboard");
-      const processAddFile = spawnSync(
-        "ruby",
-        [
-          rubyScript,
-          xcodeProjPath,
-          flavorLaunchScreenPath,
-          projectName,
-          referencePath,
-        ],
-        { stdio: "inherit" }
-      );
+      // const processAddFile = spawnSync(
+      //   "ruby",
+      //   [
+      //     rubyScript,
+      //     xcodeProjPath,
+      //     flavorLaunchScreenPath,
+      //     projectName,
+      //     referencePath,
+      //   ],
+      //   { stdio: "inherit" }
+      // );
     }
   }
 }
 
 async function generateBackgroundImage(flavorName, backgroundColor) {
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchBackground.imageset/background.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -128,7 +128,7 @@ async function generateBackgroundImage(flavorName, backgroundColor) {
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchBackground.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
@@ -141,7 +141,7 @@ async function generateLogo(
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchImage.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -193,7 +193,7 @@ async function generateLogo(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchImage.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
