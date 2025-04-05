@@ -12,6 +12,7 @@ const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
 const IosEntitlementsProcessor = require("../processors/ios/entitlementsProcessor");
+const IosXcconfigProcessor = require("../processors/ios/xcConfigProcessor");
 
 async function applyInstructions(configFilePath, options = {}) {
   const {
@@ -107,6 +108,9 @@ async function applyInstructions(configFilePath, options = {}) {
         break;
       case "ios:entitlements":
         await handleIosEntitlements(config);
+        break;
+      case "ios:xcconfig":
+        await handleIosXcconfig(config);
         break;
     }
   }
@@ -236,6 +240,16 @@ async function handleIosEntitlements(config) {
     console.log(`✅ Entitlements updated!\n`);
   } catch (error) {
     console.error("❌ Error updating entitlements:", error, "\n");
+  }
+}
+
+async function handleIosXcconfig(config) {
+  try {
+    console.log("Updating xcconfig files...");
+    await IosXcconfigProcessor(config);
+    console.log(`✅ Xcconfig files updated!\n`);
+  } catch (error) {
+    console.error("❌ Error updating xcconfig files:", error, "\n");
   }
 }
 

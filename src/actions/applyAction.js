@@ -27,6 +27,7 @@ async function applyAction(options) {
     "ios:icons",
     "ios:launchScreen",
     "ios:entitlements",
+    "ios:xcconfig",
     "ios:plist",
     "ios:podfile",
     "ios:buildTargets",

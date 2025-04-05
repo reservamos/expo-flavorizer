@@ -203,18 +203,19 @@ Apply Command Options:
 
 It is recommended that you use all the instructions and maintain the order of the configuration template.
 
-| Processor               | Description                                        |
-| ----------------------- | -------------------------------------------------- |
-| android:androidManifest | Modifies the AndroidManifest.xml file              |
-| android:buildGradle     | Updates the build.gradle file                      |
-| android:icons           | Generates flavor-specific icons for Android        |
-| android:splashScreen    | Creates flavor-specific splash screens for Android |
-| ios:icons               | Generates flavor-specific icons for iOS            |
-| ios:launchScreen        | Creates flavor-specific launch screens for iOS     |
-| ios:podfile             | Updates the Podfile                                |
-| ios:buildTargets        | Configures build targets for iOS                   |
-| ios:plist               | Modifies the Info.plist file                       |
-| ios:entitlements        | Updates the entitlements files for iOS             |
+| Processor               | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| android:androidManifest | Modifies the AndroidManifest.xml file                      |
+| android:buildGradle     | Updates the build.gradle file                              |
+| android:icons           | Generates flavor-specific icons for Android                |
+| android:splashScreen    | Creates flavor-specific splash screens for Android         |
+| ios:icons               | Generates flavor-specific icons for flavor in iOS          |
+| ios:launchScreen        | Creates flavor-specific launch screens for flavor in iOS   |
+| ios:podfile             | Updates the Podfile                                        |
+| ios:buildTargets        | Configures build targets for flavor in iOS                 |
+| ios:plist               | Generates the Info.plist file for flavor in iOS            |
+| ios:entitlements        | Updates the entitlements files for flavor in iOS           |
+| ios:xcconfig            | Generates flavor-specific xcconfig files for flavor in iOS |
 
 ## Applying the flavorization
 
