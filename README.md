@@ -182,16 +182,20 @@ Usage: flavorizer [options] [command]
 Expo Flavorizer CLI
 
 Options:
-  -V, --version        output the version number
-  -h, --help           display help for command
+  -V, --version                   output the version number
+  -h, --help                      display help for command
 
 Commands:
-  list                 List all flavors existing in the configuration file
-  init                 Initialize the flavorizer configuration file
-  add                  Add a new flavor to the configuration file
-  remove [flavorName]  Remove an existing flavor from the configuration file
-  apply                Apply all changes to the expo project
-  help [command]       display help for command
+  list                            List all flavors existing in the configuration file
+  init                            Initialize the flavorizer configuration file
+  add                             Add a new flavor to the configuration file
+  remove [flavorName]             Remove an existing flavor from the configuration file
+  apply [options]                 Apply all changes to the expo project
+  help [command]                  display help for command
+
+Apply Command Options:
+  -p, --platform <platform>       Platform to apply changes to (ios, android, all) (default: "all")
+  -i, --instructions <instructions>  Comma-separated list of specific processors to run
 ```
 
 ## Available Instructions
@@ -219,6 +223,28 @@ flavorizer apply
 ```
 
 and wait the final result.
+
+### Additional apply options
+
+You can specify which platform to apply changes to:
+
+```shell
+flavorizer apply --platform ios
+flavorizer apply -p android
+```
+
+You can also run specific processors:
+
+```shell
+flavorizer apply --instructions ios:icons,ios:launchScreen
+flavorizer apply -i android:buildGradle,android:icons
+```
+
+Or combine both options:
+
+```shell
+flavorizer apply -p ios -i icons,launchScreen
+```
 
 ## Side notes
 
