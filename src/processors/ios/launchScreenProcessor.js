@@ -31,21 +31,12 @@ async function IosLaunchScreenProcessor(config) {
       console.log("Creating LaunchScreen for flavor", flavorName);
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
+      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen.storyboard`;
 
-      const capitalizedFlavorName =
-        flavorName.charAt(0).toUpperCase() + flavorName.slice(1);
-      const flavorLaunchScreen = `SplashScreen${capitalizedFlavorName}.storyboard`;
-      const flavorLaunchScreenPath = `${process.cwd()}/ios/${projectName}/${flavorLaunchScreen}`;
-
-      await generateBackgroundImage(
-        capitalizedFlavorName,
-        projectName,
-        backgroundColor
-      );
+      await generateBackgroundImage(flavorName, backgroundColor);
 
       await generateLogo(
-        capitalizedFlavorName,
-        projectName,
+        flavorName,
         image,
         imageScale,
         imageWidth,
@@ -54,7 +45,7 @@ async function IosLaunchScreenProcessor(config) {
 
       //  create launch screen file from template
       fs.copyFileSync(
-        `${__dirname}/assets/LaunchScreen.storyboard`,
+        path.join(__dirname, "assets", "LaunchScreen.storyboard"),
         flavorLaunchScreenPath
       );
 
@@ -65,18 +56,23 @@ async function IosLaunchScreenProcessor(config) {
 
       nunjucks.configure({ autoescape: true });
       const launchScreenTemplate = nunjucks.renderString(launchScreenContent, {
-        IMAGE: `${capitalizedFlavorName}LaunchImage`,
+        IMAGE: `LaunchImage`,
         IMAGE_WIDTH: imageWidth ?? 1024,
         IMAGE_HEIGHT: imageHeight ?? 1024,
-        BACKGROUND: `${capitalizedFlavorName}LaunchBackground`,
+        BACKGROUND: `LaunchBackground`,
       });
 
+      //  write the launch screen file
       fs.writeFileSync(flavorLaunchScreenPath, launchScreenTemplate);
 
       //  add the launch screen file to the xcode project
-      const rubyScript = `${__dirname}/scripts/add_file.rb`;
-      const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
-      const referencePath = `${projectName}/${flavorLaunchScreen}`;
+      const rubyScript = path.join(__dirname, "scripts", "add_file.rb");
+      const xcodeProjPath = path.join(
+        process.cwd(),
+        "ios",
+        `${projectName}.xcodeproj`
+      );
+      const referencePath = path.join(flavorName, SplashScreen.storyboard);
       const processAddFile = spawnSync(
         "ruby",
         [
@@ -92,12 +88,8 @@ async function IosLaunchScreenProcessor(config) {
   }
 }
 
-async function generateBackgroundImage(
-  flavorName,
-  projectName,
-  backgroundColor
-) {
-  const imagesetPath = `${process.cwd()}/ios/${projectName}/Images.xcassets/${flavorName}LaunchBackground.imageset/background.png`;
+async function generateBackgroundImage(flavorName, backgroundColor) {
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -135,21 +127,20 @@ async function generateBackgroundImage(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${projectName}/Images.xcassets/${flavorName}LaunchBackground.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
 
 async function generateLogo(
   flavorName,
-  projectName,
   imagePath,
   imageScale,
   imageWidth,
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/${projectName}/Images.xcassets/${flavorName}LaunchImage.imageset/image.png`;
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -201,7 +192,7 @@ async function generateLogo(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${projectName}/Images.xcassets/${flavorName}LaunchImage.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }

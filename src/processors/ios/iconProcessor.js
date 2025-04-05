@@ -2,7 +2,6 @@ const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
-const { validateIosFolder } = require("../../utils/validateDependencies");
 
 async function IosIconProcessor(config) {
   const sizes = {
@@ -37,8 +36,6 @@ async function IosIconProcessor(config) {
       );
     }
 
-    const projectName = validateIosFolder();
-
     const iconBuffer = fs.readFileSync(defaultIcon);
     const contentsJson = {
       images: [],
@@ -48,9 +45,7 @@ async function IosIconProcessor(config) {
       },
     };
 
-    const iOSAppPath = `${process.cwd()}/ios/${projectName}/Images.xcassets/${
-      flavorName.charAt(0).toUpperCase() + flavorName.slice(1)
-    }AppIcon.appiconset`;
+    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/AppIcon.appiconset`;
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];
