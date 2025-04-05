@@ -60,7 +60,7 @@ async function generateXcConfigFile(
   buffer.push("");
   buffer.push(`FLAVOR_BUNDLE_NAME=${flavor.flavorName}`);
   buffer.push(`FLAVOR_DISPLAY_NAME=${flavor.appName}`);
-  buffer.push(`FLAVOR_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
+  buffer.push(`PRODUCT_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
   buffer.push("");
 
   for (const [key, value] of Object.entries(buildSettings)) {
