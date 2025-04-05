@@ -167,9 +167,11 @@ to create new flavors, below you can see an example configuration.
     "android:splashScreen",
     "ios:icons",
     "ios:launchScreen",
-    "ios:podfile",
+    "ios:entitlements",
+    "ios:xcconfig",
+    "ios:plist",
     "ios:buildTargets",
-    "ios:plist"
+    "ios:podfile"
   ]
 }
 ```

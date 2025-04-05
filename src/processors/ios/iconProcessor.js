@@ -87,6 +87,12 @@ async function IosIconProcessor(config) {
       `${iOSAppPath}/Contents.json`,
       JSON.stringify(contentsJson, null, 2)
     );
+
+    console.log(
+      chalk.green(
+        `✅ Created iOS app icon for flavor ${flavorName} at ${iOSAppPath}`
+      )
+    );
   });
 }
 

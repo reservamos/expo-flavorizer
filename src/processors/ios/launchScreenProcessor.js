@@ -28,7 +28,6 @@ async function IosLaunchScreenProcessor(config) {
     }
 
     if (launchScreen) {
-      console.log("Creating LaunchScreen for flavor", flavorName);
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
       const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen.storyboard`;
@@ -64,6 +63,10 @@ async function IosLaunchScreenProcessor(config) {
 
       //  write the launch screen file
       fs.writeFileSync(flavorLaunchScreenPath, launchScreenTemplate);
+
+      console.log(
+        `✅ Created launch screen file for flavor ${flavorName} at ${flavorLaunchScreenPath}`
+      );
 
       //  add the launch screen file to the xcode project
       const rubyScript = path.join(__dirname, "scripts", "add_file.rb");

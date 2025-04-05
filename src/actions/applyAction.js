@@ -29,8 +29,8 @@ async function applyAction(options) {
     "ios:entitlements",
     "ios:xcconfig",
     "ios:plist",
-    "ios:podfile",
     "ios:buildTargets",
+    "ios:podfile",
   ];
 
   // If no instructions in config, use all available
