@@ -64,9 +64,7 @@ async function IosLaunchScreenProcessor(config) {
       //  write the launch screen file
       fs.writeFileSync(flavorLaunchScreenPath, launchScreenTemplate);
 
-      console.log(
-        `✅ Created launch screen file for flavor ${flavorName} at ${flavorLaunchScreenPath}`
-      );
+      console.log(`✅ Created launch screen file for flavor ${flavorName}`);
 
       //  add the launch screen file to the xcode project
       const rubyScript = path.join(__dirname, "scripts", "add_file.rb");

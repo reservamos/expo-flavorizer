@@ -62,6 +62,8 @@ async function IosPlistProcessor(plistPath, config) {
     // Write the flavor-specific plist file
     fs.writeFileSync(flavorPlistFilePath, flavorPlistContent);
 
+    console.log(`✅ Created plist file for flavor ${flavorName}`);
+
     results.push({
       flavor: flavorName,
       plistPath: flavorPlistFilePath,
