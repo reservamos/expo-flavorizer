@@ -28,7 +28,8 @@ async function IosPodfileProcessor(podfilePath, config) {
   // validate if the podfile has the target flavors
   const matcher = /abstract_target/m;
   if (matcher.test(input)) {
-    throw new Error("AbstractTargetFound");
+    console.error("Abstract target already exists in the Podfile.");
+    return input;
   }
 
   // trim podfile until the first target

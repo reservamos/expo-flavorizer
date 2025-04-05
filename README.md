@@ -165,13 +165,13 @@ to create new flavors, below you can see an example configuration.
     "android:buildGradle",
     "android:icons",
     "android:splashScreen",
-    "ios:icons",
-    "ios:launchScreen",
     "ios:entitlements",
     "ios:xcconfig",
     "ios:plist",
-    "ios:buildTargets",
-    "ios:podfile"
+    "ios:icons",
+    "ios:launchScreen",
+    "ios:podfile",
+    "ios:buildTargets"
   ]
 }
 ```
