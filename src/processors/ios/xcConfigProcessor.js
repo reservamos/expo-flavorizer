@@ -14,19 +14,15 @@ async function IosXcConfigProcessor(config) {
   validateXcodeProj();
 
   for (const flavor of config.flavors) {
-    const { flavorName, ios } = flavor;
+    const { flavorName } = flavor;
 
     const flavorBuildSettings = flavor.buildSettings ?? {};
-
-    const rubyScript = `${__dirname}/scripts/add_file.rb`;
-    const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
 
     const buildModes = ["Debug", "Release"];
 
     for (const buildMode of buildModes) {
       const flavorXcConfig = `${buildMode}-${flavorName}.xcconfig`;
       const flavorXcConfigPath = `${process.cwd()}/ios/${flavorName}/${flavorXcConfig}`;
-      const referencePath = `${projectName}/${flavorXcConfig}`;
 
       await generateXcConfigFile(
         buildMode,
