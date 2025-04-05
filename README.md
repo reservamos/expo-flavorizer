@@ -196,6 +196,7 @@ Commands:
 Apply Command Options:
   -p, --platform <platform>       Platform to apply changes to (ios, android, all) (default: "all")
   -i, --instructions <instructions>  Comma-separated list of specific processors to run
+  -f, --flavor <flavor>           Apply changes only for a specific flavor
 ```
 
 ## Available Instructions
@@ -240,10 +241,16 @@ flavorizer apply --instructions ios:icons,ios:launchScreen
 flavorizer apply -i android:buildGradle,android:icons
 ```
 
-Or combine both options:
+You can target a specific flavor:
 
 ```shell
-flavorizer apply -p ios -i icons,launchScreen
+flavorizer apply --flavor banana
+```
+
+Or combine all options:
+
+```shell
+flavorizer apply -p ios -i icons,launchScreen -f apple
 ```
 
 ## Side notes

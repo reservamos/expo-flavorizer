@@ -8,8 +8,11 @@ async function applyAction(options) {
   const config = configLoader(configFilePath);
 
   // Extract options
-  const { platform = "all", instructions: specificInstructions } =
-    options || {};
+  const {
+    platform = "all",
+    instructions: specificInstructions,
+    flavor: specificFlavor,
+  } = options || {};
 
   // validate the instructions into the config file
   let instructions = config.instructions;
@@ -40,7 +43,7 @@ async function applyAction(options) {
   console.log(
     `\nApplying the flavors to the project with next instructions${
       platform !== "all" ? ` (for ${platform})` : ""
-    }:\n`
+    }${specificFlavor ? ` (flavor: ${specificFlavor})` : ""}:\n`
   );
 
   // Filter instructions by platform for display purposes
@@ -76,6 +79,7 @@ async function applyAction(options) {
   await applyInstructions(configFilePath, {
     platform,
     instructions: specificInstructions,
+    flavor: specificFlavor,
   });
 }
 

@@ -13,8 +13,36 @@ const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcesso
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
 
 async function applyInstructions(configFilePath, options = {}) {
-  const { platform = "all", instructions: specificInstructions } = options;
-  const config = configLoader(configFilePath);
+  const {
+    platform = "all",
+    instructions: specificInstructions,
+    flavor: specificFlavor,
+  } = options;
+  let config = configLoader(configFilePath);
+
+  // Handle flavor filtering
+  if (specificFlavor) {
+    console.log(`Filtering for specific flavor: ${specificFlavor}`);
+    const filteredFlavors = config.flavors.filter(
+      (flavor) => flavor.flavorName === specificFlavor
+    );
+
+    if (filteredFlavors.length === 0) {
+      console.error(
+        `❌ Error: Flavor "${specificFlavor}" not found in configuration`
+      );
+      return;
+    }
+
+    // Create a new config object with only the specified flavor
+    config = {
+      ...config,
+      flavors: filteredFlavors,
+    };
+  } else {
+    // When no specific flavor is set, use all flavors (default behavior)
+    console.log(`Applying to all ${config.flavors.length} flavors`);
+  }
 
   // Filter instructions based on platform and specific instructions if provided
   let instructionsToRun = config.instructions;

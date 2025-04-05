@@ -54,6 +54,7 @@ program
     "-i, --instructions <instructions>",
     "Comma-separated list of specific processors to run"
   )
+  .option("-f, --flavor <flavor>", "Apply changes only for a specific flavor")
   .action(bootstrap(applyAction));
 
 program.parse(process.argv);
