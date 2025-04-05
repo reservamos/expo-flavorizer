@@ -214,6 +214,7 @@ It is recommended that you use all the instructions and maintain the order of th
 | ios:podfile             | Updates the Podfile                                |
 | ios:buildTargets        | Configures build targets for iOS                   |
 | ios:plist               | Modifies the Info.plist file                       |
+| ios:entitlements        | Updates the entitlements files for iOS             |
 
 ## Applying the flavorization
 

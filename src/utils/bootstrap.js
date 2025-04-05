@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const figlet = require("figlet");
 
-const headerText = "React Native\nFlavorizer";
+const headerText = "Expo Flavorizer";
 const textConfig = {
   font: "speed",
   horizontalLayout: "default",

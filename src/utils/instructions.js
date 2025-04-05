@@ -11,6 +11,7 @@ const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcesso
 const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
+const IosEntitlementsProcessor = require("../processors/ios/entitlementsProcessor");
 
 async function applyInstructions(configFilePath, options = {}) {
   const {
@@ -61,11 +62,16 @@ async function applyInstructions(configFilePath, options = {}) {
       .map((i) => i.trim());
     instructionsToRun = instructionsToRun.filter((instruction) => {
       // Check if the full instruction is in the list or if just the processor part is in the list
-      const [platform, processor] = instruction.split(":");
+      const [instrPlatform, processor] = instruction.split(":");
       return (
         specificInstructionsList.includes(instruction) ||
         specificInstructionsList.includes(processor) ||
-        specificInstructionsList.includes(`${platform}:${processor}`)
+        specificInstructionsList.includes(`${instrPlatform}:${processor}`) ||
+        // Add this condition to check if the processor name contains the specified instruction
+        // This handles cases like "entitlements" matching "ios:entitlements"
+        specificInstructionsList.some((specInstr) =>
+          processor.includes(specInstr)
+        )
       );
     });
   }
@@ -98,6 +104,9 @@ async function applyInstructions(configFilePath, options = {}) {
         break;
       case "ios:launchScreen":
         await handleIosLaunchScreen(config);
+        break;
+      case "ios:entitlements":
+        await handleIosEntitlements(config);
         break;
     }
   }
@@ -217,6 +226,16 @@ async function handleIosLaunchScreen(config) {
     console.log(`✅ LaunchScreen updated!\n`);
   } catch (error) {
     console.error("❌ Error updating launchScreen:", error, "\n");
+  }
+}
+
+async function handleIosEntitlements(config) {
+  try {
+    console.log("Updating entitlements...");
+    await IosEntitlementsProcessor(config);
+    console.log(`✅ Entitlements updated!\n`);
+  } catch (error) {
+    console.error("❌ Error updating entitlements:", error, "\n");
   }
 }
 
