@@ -45,6 +45,15 @@ program
 program
   .command("apply")
   .description("Apply all changes to the expo project")
+  .option(
+    "-p, --platform <platform>",
+    "Platform to apply changes to (ios, android, all)",
+    "all"
+  )
+  .option(
+    "-i, --instructions <instructions>",
+    "Comma-separated list of specific processors to run"
+  )
   .action(bootstrap(applyAction));
 
 program.parse(process.argv);
