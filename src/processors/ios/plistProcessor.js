@@ -48,6 +48,8 @@ async function IosPlistProcessor(plistPath, config) {
       CFBundleIdentifier: "$(PRODUCT_BUNDLE_IDENTIFIER)",
       CFBundleName: "$(BUNDLE_NAME)",
       UILaunchStoryboardName: "$(SPLASH_SCREEN)",
+      CFBundleShortVersionString: "$(MARKETING_VERSION)",
+      CFBundleVersion: "$(CURRENT_PROJECT_VERSION)",
     };
 
     // Process the plist content with flavor-specific values
