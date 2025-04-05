@@ -20,7 +20,7 @@ function createFlavorFolders(config, { platform = "all", specificFlavor }) {
   }
 
   const flavors = specificFlavor
-    ? config.flavors.filter((flavor) => flavor.name === specificFlavor)
+    ? config.flavors.filter((flavor) => flavor.flavorName === specificFlavor)
     : config.flavors;
 
   if (flavors.length === 0) {
@@ -46,7 +46,15 @@ function createFlavorFolders(config, { platform = "all", specificFlavor }) {
     }
 
     flavors.forEach((flavor) => {
-      const flavorPath = path.join(androidBasePath, flavor.name);
+      // Validate that flavor has a valid name property
+      if (!flavor || !flavor.flavorName) {
+        console.log(
+          chalk.red("❌ Error: Found a flavor without a valid name property")
+        );
+        return; // Skip this flavor
+      }
+
+      const flavorPath = path.join(androidBasePath, flavor.flavorName);
       if (!fs.existsSync(flavorPath)) {
         fs.mkdirSync(flavorPath, { recursive: true });
         console.log(
@@ -66,6 +74,14 @@ function createFlavorFolders(config, { platform = "all", specificFlavor }) {
     const iosBasePath = path.join(process.cwd(), "ios");
 
     flavors.forEach((flavor) => {
+      // Validate that flavor has a valid name property
+      if (!flavor || !flavor.name) {
+        console.log(
+          chalk.red("❌ Error: Found a flavor without a valid name property")
+        );
+        return; // Skip this flavor
+      }
+
       const flavorPath = path.join(iosBasePath, flavor.name);
       if (!fs.existsSync(flavorPath)) {
         fs.mkdirSync(flavorPath, { recursive: true });
