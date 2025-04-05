@@ -28,7 +28,7 @@ async function AndroidClassicIconProcessor(config) {
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];
-      const iconPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/ic_launcher.png`;
+      const iconPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/ic_launcher.webp`;
       const icon = path.resolve(iconPath);
       const iconExists = fs.existsSync(icon);
 
@@ -40,6 +40,7 @@ async function AndroidClassicIconProcessor(config) {
 
       sharp(iconBuffer)
         .resize(width, height)
+        .webp({ quality: 90 })
         .toFile(icon, (err) => {
           if (err) {
             throw err;

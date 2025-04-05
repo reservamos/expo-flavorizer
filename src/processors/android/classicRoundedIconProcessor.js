@@ -28,7 +28,7 @@ async function AndroidClassicRoundedIconProcessor(config) {
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];
-      const iconPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/ic_launcher_round.png`;
+      const iconPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/ic_launcher_round.webp`;
       const icon = path.resolve(iconPath);
       const iconExists = fs.existsSync(icon);
 
@@ -51,6 +51,7 @@ async function AndroidClassicRoundedIconProcessor(config) {
             blend: "dest-in",
           },
         ])
+        .webp({ quality: 90 })
         .toFile(icon, (err) => {
           if (err) {
             throw new Error(err);

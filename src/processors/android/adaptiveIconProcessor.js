@@ -65,7 +65,7 @@ function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName, scale) {
 
   Object.keys(sizes).forEach((size) => {
     const [width, height] = sizes[size];
-    const iconOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/${iconName}.png`;
+    const iconOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/${size}/${iconName}.webp`;
     const icon = path.resolve(iconOutputPath);
     const iconExists = fs.existsSync(icon);
 
@@ -99,6 +99,7 @@ function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName, scale) {
                 gravity: "centre",
               },
             ])
+            .webp({ quality: 90 })
             .toFile(icon, (err) => {
               if (err) {
                 throw err;
@@ -108,6 +109,7 @@ function generateAdaptiveIcon(iconPath, iconName, sizes, flavorName, scale) {
     } else {
       sharp(iconBuffer)
         .resize(width, height)
+        .webp({ quality: 90 })
         .toFile(icon, (err) => {
           if (err) {
             throw err;
