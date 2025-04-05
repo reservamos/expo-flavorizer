@@ -40,7 +40,15 @@ async function IosBuildTargetsProcessor(config) {
       { stdio: "inherit" }
     );
 
-    console.log(`✅ Flavor ${flavorName} added to Xcode project`);
+    processCreateTargets.on("close", (code) => {
+      if (code === 0) {
+        console.log(`✅ Flavor ${flavorName} added to Xcode project`);
+      } else {
+        console.error(
+          `❌ Failed to add flavor ${flavorName} to Xcode project. Exit code: ${code}`
+        );
+      }
+    });
   }
 
   console.log("\n🧹 Cleaning previous pods project...");
@@ -48,6 +56,14 @@ async function IosBuildTargetsProcessor(config) {
     stdio: "inherit",
     shell: true,
     cwd: `${process.cwd()}/ios`,
+  });
+
+  processCleanPods.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`Error cleaning pods project: ${code}`);
+      return;
+    }
+    console.log(`Pods project cleaned successfully`);
   });
 
   console.log("\n🧹 Cleaning previous xcode project...");
@@ -60,11 +76,19 @@ async function IosBuildTargetsProcessor(config) {
     }
   );
 
-  console.log("\n🚀 Updating pods project...\n");
-  const processUpdatePods = spawnSync("npx", ["pod-install"], {
-    stdio: "inherit",
-    shell: true,
+  processCleanXcodeBuild.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`Error cleaning xcode project: ${code}`);
+      return;
+    }
+    console.log(`Xcode project cleaned successfully`);
   });
+
+  // console.log("\n🚀 Updating pods project...\n");
+  // const processUpdatePods = spawnSync("npx", ["pod-install"], {
+  //   stdio: "inherit",
+  //   shell: true,
+  // });
 }
 
 module.exports = IosBuildTargetsProcessor;

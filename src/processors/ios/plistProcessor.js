@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 const {
   validateIosFolder,
   validateXcodeProj,
@@ -12,29 +13,62 @@ async function IosPlistProcessor(plistPath, config) {
   const projectName = validateIosFolder();
   validateXcodeProj();
 
-  let plistFilePath = "";
+  // Determine the source plist file path
+  let sourcePlistFilePath = "";
   if (!plistPath) {
-    plistFilePath = `${process.cwd()}/ios/${projectName}/Info.plist`;
+    sourcePlistFilePath = `${process.cwd()}/ios/${projectName}/Info.plist`;
   } else {
-    plistFilePath = plistPath;
+    sourcePlistFilePath = plistPath;
   }
 
-  let input = fs.readFileSync(plistFilePath, "utf8");
+  // Read the original plist content
+  const originalPlistContent = fs.readFileSync(sourcePlistFilePath, "utf8");
 
-  const plistValues = {
-    CFBundleDisplayName: "$(FLAVOR_DISPLAY_NAME)",
-    CFBundleIdentifier: "$(FLAVOR_BUNDLE_IDENTIFIER)",
-    CFBundleName: "$(FLAVOR_BUNDLE_NAME)",
-    UILaunchStoryboardName: "$(FLAVOR_SPLASH_SCREEN)",
-  };
+  const results = [];
 
-  for (const key in plistValues) {
-    input = replacePlistValue(input, key, plistValues[key]);
+  // Process each flavor
+  for (const flavor of config.flavors) {
+    const flavorName = flavor.flavorName;
+
+    // Create flavor directory if it doesn't exist
+    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    if (!fs.existsSync(flavorDirPath)) {
+      fs.mkdirSync(flavorDirPath, { recursive: true });
+    }
+
+    // Define the target plist path for this flavor
+    const flavorPlistFilePath = `${flavorDirPath}/Info.plist`;
+
+    // Start with the original content
+    let flavorPlistContent = originalPlistContent;
+
+    // Define the plist values specific to this flavor
+    const plistValues = {
+      CFBundleDisplayName: flavor.appName || "$(FLAVOR_DISPLAY_NAME)",
+      CFBundleIdentifier: flavor.ios.bundleId || "$(FLAVOR_BUNDLE_IDENTIFIER)",
+      CFBundleName: flavor.flavorName || "$(FLAVOR_BUNDLE_NAME)",
+      UILaunchStoryboardName: "SplashScreen",
+    };
+
+    // Process the plist content with flavor-specific values
+    for (const key in plistValues) {
+      flavorPlistContent = replacePlistValue(
+        flavorPlistContent,
+        key,
+        plistValues[key]
+      );
+    }
+
+    // Write the flavor-specific plist file
+    fs.writeFileSync(flavorPlistFilePath, flavorPlistContent);
+
+    results.push({
+      flavor: flavorName,
+      plistPath: flavorPlistFilePath,
+    });
   }
 
-  fs.writeFileSync(plistFilePath, input);
-
-  return input;
+  return results;
 }
 
 function replacePlistValue(input, key, value) {

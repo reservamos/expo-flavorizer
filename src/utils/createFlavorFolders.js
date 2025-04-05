@@ -75,14 +75,14 @@ function createFlavorFolders(config, { platform = "all", specificFlavor }) {
 
     flavors.forEach((flavor) => {
       // Validate that flavor has a valid name property
-      if (!flavor || !flavor.name) {
+      if (!flavor || !flavor.flavorName) {
         console.log(
           chalk.red("❌ Error: Found a flavor without a valid name property")
         );
         return; // Skip this flavor
       }
 
-      const flavorPath = path.join(iosBasePath, flavor.name);
+      const flavorPath = path.join(iosBasePath, flavor.flavorName);
       if (!fs.existsSync(flavorPath)) {
         fs.mkdirSync(flavorPath, { recursive: true });
         console.log(

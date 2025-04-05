@@ -72,7 +72,7 @@ async function IosLaunchScreenProcessor(config) {
         "ios",
         `${projectName}.xcodeproj`
       );
-      const referencePath = path.join(flavorName, SplashScreen.storyboard);
+      const referencePath = path.join(flavorName, "SplashScreen.storyboard");
       const processAddFile = spawnSync(
         "ruby",
         [
