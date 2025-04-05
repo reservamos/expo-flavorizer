@@ -35,11 +35,6 @@ async function IosBuildTargetsProcessor(config) {
 
     const flavorBuildSettings = {
       ...flavor.buildSettings,
-      FLAVOR_ASSET_PREFIX: capitalizedFlavorName,
-      FLAVOR_BUNDLE_NAME: flavorName,
-      FLAVOR_DISPLAY_NAME: appName,
-      FLAVOR_BUNDLE_IDENTIFIER: ios.bundleId,
-      FLAVOR_SPLASH_SCREEN: `SplashScreen${capitalizedFlavorName}`,
     };
 
     const rubyScript = `${__dirname}/scripts/add_targets.rb`;

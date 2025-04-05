@@ -44,10 +44,10 @@ async function IosPlistProcessor(plistPath, config) {
 
     // Define the plist values specific to this flavor
     const plistValues = {
-      CFBundleDisplayName: flavor.appName || "$(FLAVOR_DISPLAY_NAME)",
+      CFBundleDisplayName: "$(DISPLAY_NAME)",
       CFBundleIdentifier: "$(PRODUCT_BUNDLE_IDENTIFIER)",
-      CFBundleName: flavor.flavorName || "$(FLAVOR_BUNDLE_NAME)",
-      UILaunchStoryboardName: "SplashScreen",
+      CFBundleName: "$(BUNDLE_NAME)",
+      UILaunchStoryboardName: "$(SPLASH_SCREEN)",
     };
 
     // Process the plist content with flavor-specific values

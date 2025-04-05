@@ -65,10 +65,28 @@ flavor_target.build_configurations.map do |item|
     item.build_settings['CODE_SIGN_ENTITLEMENTS'] = "#{flavor}/Debug-#{flavor}.entitlements"
     item.build_settings['INFOPLIST_FILE'] = "#{flavor}/Info-#{flavor}.plist"
     item.build_settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = "AppIcon-#{flavor}"
-  elsif item.name == "Release"
+    item.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    item.build_settings['MARKETING_VERSION'] = "$(MARKETING_VERSION)"
+    item.build_settings['CURRENT_PROJECT_VERSION'] = "$(CURRENT_PROJECT_VERSION)"
+    item.build_settings['INFOPLIST_KEY_CFBundleDisplayName'] = "$(DISPLAY_NAME)"
+    item.build_settings['INFOPLIST_KEY_UILaunchStoryboardName'] = "$(SPLASH_SCREEN)"
+    
+    # Set debug xcconfig if it exists
+    debug_xcconfig_file = flavor_group.files.find { |file| file.path.end_with?("Debug-#{flavor}.xcconfig") } if flavor_group
+    item.base_configuration_reference = debug_xcconfig_file if debug_xcconfig_file
+    elsif item.name == "Release"
     item.build_settings['CODE_SIGN_ENTITLEMENTS'] = "#{flavor}/Release-#{flavor}.entitlements"
     item.build_settings['INFOPLIST_FILE'] = "#{flavor}/Info-#{flavor}.plist"
     item.build_settings['ASSETCATALOG_COMPILER_APPICON_NAME'] = "AppIcon-#{flavor}"
+    item.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    item.build_settings['MARKETING_VERSION'] = "$(MARKETING_VERSION)"
+    item.build_settings['CURRENT_PROJECT_VERSION'] = "$(CURRENT_PROJECT_VERSION)"
+    item.build_settings['INFOPLIST_KEY_CFBundleDisplayName'] = "$(DISPLAY_NAME)"
+    item.build_settings['INFOPLIST_KEY_UILaunchStoryboardName'] = "$(SPLASH_SCREEN)"
+    
+    # Set release xcconfig if it exists
+    release_xcconfig_file = flavor_group.files.find { |file| file.path.end_with?("Release-#{flavor}.xcconfig") } if flavor_group
+    item.base_configuration_reference = release_xcconfig_file if release_xcconfig_file
   end
 end
 

@@ -58,10 +58,16 @@ async function generateXcConfigFile(
     `#include? "Pods/Target Support Files/Pods-common-${projectName}/Pods-common-${projectName}.${buildMode.toLowerCase()}.xcconfig"`
   );
   buffer.push("");
-  buffer.push(`FLAVOR_BUNDLE_NAME=${flavor.flavorName}`);
-  buffer.push(`FLAVOR_DISPLAY_NAME=${flavor.appName}`);
+  buffer.push(`BUNDLE_NAME=${flavor.flavorName}`);
+  buffer.push(`DISPLAY_NAME=${flavor.appName}`);
   buffer.push(`PRODUCT_BUNDLE_IDENTIFIER=${flavor.ios.bundleId}`);
-  buffer.push("");
+  buffer.push(`MARKETING_VERSION=${flavor.ios.versionString ?? "1.0"}`);
+  const buildNumber =
+    typeof flavor.ios.buildNumber === "number"
+      ? flavor.ios.buildNumber
+      : parseInt(flavor.ios.buildNumber, 10) || 1;
+  buffer.push(`CURRENT_PROJECT_VERSION=${buildNumber}`);
+  buffer.push(`SPLASH_SCREEN=SplashScreen-${flavor.flavorName}.storyboard`);
 
   for (const [key, value] of Object.entries(buildSettings)) {
     buffer.push(`${key}=${value}`);
