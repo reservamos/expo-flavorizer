@@ -2,6 +2,7 @@ const chalk = require("chalk");
 const constants = require("../utils/constants");
 const configLoader = require("../utils/configLoader");
 const { applyInstructions } = require("../utils/instructions");
+const createFlavorFolders = require("../utils/createFlavorFolders");
 
 async function applyAction(options) {
   const configFilePath = `${process.cwd()}/${constants.CONFIG_FILE}`;
@@ -39,6 +40,9 @@ async function applyAction(options) {
     // Update the config with all instructions
     config.instructions = instructions;
   }
+
+  // Create folder structure for flavors
+  createFlavorFolders(config, { platform, specificFlavor });
 
   console.log(
     `\nApplying the flavors to the project with next instructions${
