@@ -63,7 +63,7 @@ async function generateXcConfigFile(
       ? flavor.ios.buildNumber
       : parseInt(flavor.ios.buildNumber, 10) || 1;
   buffer.push(`CURRENT_PROJECT_VERSION=${buildNumber}`);
-  buffer.push(`SPLASH_SCREEN=SplashScreen-${flavor.flavorName}.storyboard`);
+  buffer.push(`SPLASH_SCREEN=SplashScreen.storyboard`);
 
   for (const [key, value] of Object.entries(buildSettings)) {
     buffer.push(`${key}=${value}`);

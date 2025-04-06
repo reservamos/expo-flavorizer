@@ -29,7 +29,7 @@ async function IosLaunchScreenProcessor(config) {
     if (launchScreen) {
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
-      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen-${flavorName}.storyboard`;
+      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen.storyboard`;
 
       await generateBackgroundImage(flavorName, backgroundColor);
 

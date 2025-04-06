@@ -40,7 +40,7 @@ if flavor_group.nil?
       "Release-#{flavor}.xcconfig",
       "PrivacyInfo-#{flavor}.xcprivacy",
       "Info-#{flavor}.plist", 
-      "SplashScreen-#{flavor}.storyboard"
+      "SplashScreen.storyboard"
     ].each do |filename|
       file_path = File.join(flavor_dir, filename)
       if File.exist?(file_path)
@@ -71,6 +71,8 @@ flavor_target.build_configurations.map do |item|
     item.build_settings['CURRENT_PROJECT_VERSION'] = "$(CURRENT_PROJECT_VERSION)"
     item.build_settings['INFOPLIST_KEY_CFBundleDisplayName'] = "$(DISPLAY_NAME)"
     item.build_settings['INFOPLIST_KEY_UILaunchStoryboardName'] = "$(SPLASH_SCREEN)"
+    item.build_settings['PRODUCT_NAME'] = "$(BUNDLE_NAME)";
+    item.build_settings['ENABLE_BITCODE'] = 'NO'
     
     # Set debug xcconfig if it exists
     debug_xcconfig_file = flavor_group.files.find { |file| file.path.end_with?("Debug-#{flavor}.xcconfig") } if flavor_group
@@ -84,6 +86,8 @@ flavor_target.build_configurations.map do |item|
     item.build_settings['CURRENT_PROJECT_VERSION'] = "$(CURRENT_PROJECT_VERSION)"
     item.build_settings['INFOPLIST_KEY_CFBundleDisplayName'] = "$(DISPLAY_NAME)"
     item.build_settings['INFOPLIST_KEY_UILaunchStoryboardName'] = "$(SPLASH_SCREEN)"
+    item.build_settings['PRODUCT_NAME'] = "$(BUNDLE_NAME)";
+    item.build_settings['ENABLE_BITCODE'] = 'NO'
     
     # Set release xcconfig if it exists
     release_xcconfig_file = flavor_group.files.find { |file| file.path.end_with?("Release-#{flavor}.xcconfig") } if flavor_group
