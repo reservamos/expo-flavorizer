@@ -73,8 +73,8 @@ to create new flavors, below you can see an example configuration.
     },
     "ios": {
       "buildSettings": {
-        "IPHONEOS_DEPLOYMENT_TARGET": "13.0",
-        "MINIMUM_IPHONEOS_VERSION": "13.0"
+        "IPHONEOS_DEPLOYMENT_TARGET": "15.6",
+        "MINIMUM_IPHONEOS_VERSION": "15.6"
       }
     }
   },
@@ -101,6 +101,8 @@ to create new flavors, below you can see an example configuration.
       },
       "ios": {
         "bundleId": "com.example.apple",
+        "versionString": "2.2.0",
+        "buildNumber": "020200",
         "launchScreen": {
           "backgroundColor": "#C35955",
           "image": "testResources/assets/fg-apple.png"
@@ -153,6 +155,8 @@ to create new flavors, below you can see an example configuration.
       },
       "ios": {
         "bundleId": "com.example.banana",
+        "versionString": "1.0.0",
+        "buildNumber": "100000",
         "launchScreen": {
           "backgroundColor": "#E4C65C",
           "image": "testResources/assets/fg-banana.png"

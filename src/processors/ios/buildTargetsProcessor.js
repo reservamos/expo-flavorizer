@@ -34,7 +34,8 @@ async function IosBuildTargetsProcessor(config) {
     }
 
     const flavorBuildSettings = {
-      ...flavor.buildSettings,
+      ...flavor.ios.buildSettings,
+      ...config.app.ios.buildSettings,
     };
 
     const rubyScript = `${__dirname}/scripts/add_targets.rb`;
