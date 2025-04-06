@@ -78,6 +78,7 @@ async function IosBuildTargetsProcessor(config) {
     shell: true,
   });
 
+  // check if exists the expo-modules reference in the xcode project
   console.log("\n🧹 Cleaning outdated ExpoModulesProvider references...");
   const cleanExpoModulesScript = `${__dirname}/scripts/clean_expo_modules_refs.rb`;
   const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
@@ -87,8 +88,6 @@ async function IosBuildTargetsProcessor(config) {
     [cleanExpoModulesScript, xcodeProjPath, projectName],
     { stdio: "inherit" }
   );
-
-  // check if exists the expo-modules reference in the xcode project
 }
 
 module.exports = IosBuildTargetsProcessor;
