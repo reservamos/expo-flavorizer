@@ -65,7 +65,7 @@ async function generateSplashScreenImage(
   const imageBuffer = fs.readFileSync(imagePath);
 
   const [width, height] = size;
-  const imageOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable-${density}/splashscreen_image.png`;
+  const imageOutputPath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable-${density}/splashscreen_logo.png`;
   const image = path.resolve(imageOutputPath);
   const imageExists = fs.existsSync(image);
 
@@ -197,7 +197,7 @@ async function generateColorsXML(flavorName, backgroundColor) {
 }
 
 async function generateSplashScreenXML(flavorName) {
-  const xmlFilePath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable/splashscreen.xml`;
+  const xmlFilePath = `${process.cwd()}/android/app/src/${flavorName}/res/drawable/ic_launcher_background.xml`;
   const xml = path.resolve(xmlFilePath);
   const xmlExists = fs.existsSync(xml);
 
@@ -211,10 +211,7 @@ async function generateSplashScreenXML(flavorName) {
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:drawable="@color/splashscreen_background"/>
   <item>
-    <bitmap
-      android:gravity="center"
-      android:src="@drawable/splashscreen_image"
-    />
+    <bitmap android:gravity="center" android:src="@drawable/splashscreen_logo"/>
   </item>
 </layer-list>`;
 

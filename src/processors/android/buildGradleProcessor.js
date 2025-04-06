@@ -101,14 +101,9 @@ function appendFlavors(buffer, config) {
       });
     }
 
-    const resValues = {
-      appName: {
-        type: "string",
-        value: flavor.appName,
-      },
-      ...config.app.android.resValues,
-      ...flavor.android.resValues,
-    };
+    // Add resValues to the build.gradle
+    // Convert camelCase keys to snake_case and wrap values in quotes
+    const resValues = flavor.android.resValues;
 
     Object.entries(snakeize(resValues)).forEach(([key, res]) => {
       buffer.push(
@@ -116,12 +111,20 @@ function appendFlavors(buffer, config) {
       );
     });
 
-    const buildConfigFields = {
-      ...config.app.android.buildConfigFields,
-      ...flavor.android.buildConfigFields,
-    };
+    // Add manifestPlaceholders to the build.gradle
+    const manifestPlaceholders = flavor.android.manifestPlaceholders;
 
-    Object.entries(snakeize(buildConfigFields)).forEach(([key, res]) => {
+    const manifestPlaceholdersArray = Object.entries(manifestPlaceholders)
+      .map(([key, value]) => `${key}: '${value}'`)
+      .join(", ");
+    buffer.push(
+      `            manifestPlaceholders = [${manifestPlaceholdersArray}]`
+    );
+
+    // Add buildConfigFields to the build.gradle
+    const buildConfigFields = flavor.android.buildConfigFields || {};
+
+    Object.entries(buildConfigFields).forEach(([key, res]) => {
       buffer.push(
         `            buildConfigField "${res.type}", "${key}", ${wrappedValue(
           res.type,
@@ -130,6 +133,12 @@ function appendFlavors(buffer, config) {
       );
     });
 
+    // Add versionCode and versionName
+    const versionCode = flavor.android.buildNumber ?? 1;
+    const versionName = flavor.android.versionString ?? "1.0.0";
+
+    buffer.push(`            versionCode ${versionCode}`);
+    buffer.push(`            versionName "${versionName}"`);
     buffer.push("        }");
   });
 
