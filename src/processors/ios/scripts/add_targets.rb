@@ -108,9 +108,18 @@ base_target.build_phases.each do |base_phase|
       # Skip specific resources we don't want in flavor targets
       next if build_file.file_ref && [
         'Images.xcassets', 
-        'SplashScreen.storyboard', 
-        'PrivacyInfo.xcprivacy'
+        'SplashScreen.storyboard'
       ].any? { |name| build_file.file_ref.path.end_with?(name) }
+      
+      # Skip any privacy info file from the base target - multiple checks to ensure it's caught
+      if build_file.file_ref
+        path = build_file.file_ref.path
+        privacy_file = path.include?('PrivacyInfo') && path.end_with?('.xcprivacy') 
+        base_privacy_file = path == 'example/PrivacyInfo.xcprivacy' || path == 'PrivacyInfo.xcprivacy'
+        
+        # Skip if it's any form of the base privacy file
+        next if privacy_file && !path.include?(flavor)
+      end
       
       # Keep resources from Supporting folder
       if build_file.file_ref && build_file.file_ref.path.include?('Supporting')
@@ -123,11 +132,13 @@ base_target.build_phases.each do |base_phase|
     
     # Add flavor-specific resources
     if flavor_group
+      puts "Adding flavor-specific resources for #{flavor}"
       flavor_resources = flavor_group.files.select do |file|
-        ['.xcassets', '.storyboard', '.plist', '.xcconfig'].any? { |ext| file.path.end_with?(ext) }
+        ['.xcassets', '.storyboard', '.plist', '.xcconfig', '.xcprivacy'].any? { |ext| file.path.end_with?(ext) }
       end
       
       flavor_resources.each do |resource|
+        puts "Adding flavor resource: #{resource.path}"
         resources_phase.add_file_reference(resource)
       end
     end
