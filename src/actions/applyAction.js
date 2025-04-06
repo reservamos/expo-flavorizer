@@ -29,8 +29,8 @@ async function applyAction(options) {
     "ios:plist",
     "ios:icons",
     "ios:launchScreen",
-    "ios:buildTargets",
     "ios:podfile",
+    "ios:buildTargets",
   ];
 
   // If no instructions in config, use all available

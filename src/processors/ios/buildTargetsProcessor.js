@@ -71,11 +71,23 @@ async function IosBuildTargetsProcessor(config) {
     }
   );
 
-  // console.log("\n🚀 Updating pods project...\n");
-  // const processUpdatePods = spawnSync("npx", ["pod-install"], {
-  //   stdio: "inherit",
-  //   shell: true,
-  // });
+  console.log("\n🚀 Updating pods project...\n");
+  const processUpdatePods = spawnSync("npx", ["pod-install"], {
+    stdio: "inherit",
+    shell: true,
+  });
+
+  console.log("\n🧹 Cleaning outdated ExpoModulesProvider references...");
+  const cleanExpoModulesScript = `${__dirname}/scripts/clean_expo_modules_refs.rb`;
+  const xcodeProjPath = `${process.cwd()}/ios/${projectName}.xcodeproj`;
+
+  const processCleanExpoModules = spawnSync(
+    "ruby",
+    [cleanExpoModulesScript, xcodeProjPath, projectName],
+    { stdio: "inherit" }
+  );
+
+  // check if exists the expo-modules reference in the xcode project
 }
 
 module.exports = IosBuildTargetsProcessor;
