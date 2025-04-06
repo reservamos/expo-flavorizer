@@ -171,6 +171,7 @@ to create new flavors, below you can see an example configuration.
     "android:splashScreen",
     "ios:entitlements",
     "ios:xcconfig",
+    "ios:xcprivacyinfo",
     "ios:plist",
     "ios:icons",
     "ios:launchScreen",
@@ -222,6 +223,7 @@ It is recommended that you use all the instructions and maintain the order of th
 | ios:plist               | Generates the Info.plist file for flavor in iOS            |
 | ios:entitlements        | Updates the entitlements files for flavor in iOS           |
 | ios:xcconfig            | Generates flavor-specific xcconfig files for flavor in iOS |
+| ios:xcprivacyinfo       | Copies privacy info files for each flavor in iOS           |
 
 ## Applying the flavorization
 

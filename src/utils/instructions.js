@@ -13,6 +13,7 @@ const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcesso
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
 const IosEntitlementsProcessor = require("../processors/ios/entitlementsProcessor");
 const IosXcconfigProcessor = require("../processors/ios/xcConfigProcessor");
+const IosXcPrivacyInfoProcessor = require("../processors/ios/xcPrivacyInfoProcessor");
 
 async function applyInstructions(configFilePath, options = {}) {
   const {
@@ -83,6 +84,9 @@ async function applyInstructions(configFilePath, options = {}) {
         break;
       case "ios:xcconfig":
         await handleIosXcconfig(config);
+        break;
+      case "ios:xcprivacyinfo":
+        await handleIosXcPrivacyInfo(config);
         break;
     }
   }
@@ -222,6 +226,16 @@ async function handleIosXcconfig(config) {
     console.log(`✅ Xcconfig files updated!\n`);
   } catch (error) {
     console.error("❌ Error updating xcconfig files:", error, "\n");
+  }
+}
+
+async function handleIosXcPrivacyInfo(config) {
+  try {
+    console.log("Updating XC Privacy Info files...");
+    await IosXcPrivacyInfoProcessor(config);
+    console.log(`✅ XC Privacy Info files updated!\n`);
+  } catch (error) {
+    console.error("❌ Error updating XC Privacy Info files:", error, "\n");
   }
 }
 

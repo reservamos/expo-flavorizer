@@ -31,6 +31,7 @@ async function applyAction(options) {
     "android:splashScreen",
     "ios:entitlements",
     "ios:xcconfig",
+    "ios:xcprivacyinfo",
     "ios:plist",
     "ios:icons",
     "ios:launchScreen",
