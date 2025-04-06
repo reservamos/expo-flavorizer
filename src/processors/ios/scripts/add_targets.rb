@@ -104,7 +104,20 @@ base_target.build_phases.each do |base_phase|
   when 'PBXResourcesBuildPhase'
     resources_phase = flavor_target.resources_build_phase
     base_phase.files.each do |build_file|
-      resources_phase.add_file_reference(build_file.file_ref) if build_file.file_ref
+      # Skip specific resources we don't want in flavor targets
+      next if build_file.file_ref && [
+        'Images.xcassets', 
+        'SplashScreen.storyboard', 
+        'PrivacyInfo.xcprivacy'
+      ].any? { |name| build_file.file_ref.path.end_with?(name) }
+      
+      # Keep resources from Supporting folder
+      if build_file.file_ref && build_file.file_ref.path.include?('Supporting')
+        resources_phase.add_file_reference(build_file.file_ref)
+      # Add other resources that aren't in the excluded list
+      elsif build_file.file_ref
+        resources_phase.add_file_reference(build_file.file_ref)
+      end
     end
     
     # Add flavor-specific resources
