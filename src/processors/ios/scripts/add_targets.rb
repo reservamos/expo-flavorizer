@@ -15,17 +15,9 @@ build_settings = JSON.parse(Base64.decode64(ARGV[3]))
 project = Xcodeproj::Project.open(project_path)
 base_target = project.targets.detect { |target| target.name == project_name }
 
-# Check if the flavor target already exists
-flavor_target = project.targets.detect { |target| target.name == flavor }
-
-if flavor_target
-  puts "Flavor target '#{flavor}' already exists. Updating it."
-else
-  # Create a new flavor target if it doesn't exist
-  flavor_target = project.new_target(base_target.symbol_type, flavor, base_target.platform_name, base_target.deployment_target)
-  flavor_target.product_name = flavor
-  puts "Created new flavor target '#{flavor}'."
-end
+# create target
+flavor_target = project.new_target(base_target.symbol_type, flavor, base_target.platform_name, base_target.deployment_target)
+flavor_target.product_name = flavor
 
 # Ensure Flavors group exists
 flavors_group = project.main_group.find_subpath('Flavors', true)
