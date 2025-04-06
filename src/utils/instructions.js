@@ -17,7 +17,7 @@ const IosXcconfigProcessor = require("../processors/ios/xcConfigProcessor");
 async function applyInstructions(configFilePath, options = {}) {
   const {
     platform = "all",
-    instructions: specificInstructions,
+    instructions: instructionsToRun,
     flavor: specificFlavor,
   } = options;
   let config = configLoader(configFilePath);
@@ -25,6 +25,7 @@ async function applyInstructions(configFilePath, options = {}) {
   // Handle flavor filtering
   if (specificFlavor) {
     console.log(`Filtering for specific flavor: ${specificFlavor}`);
+    console.log("\n");
     const filteredFlavors = config.flavors.filter(
       (flavor) => flavor.flavorName === specificFlavor
     );
@@ -33,6 +34,7 @@ async function applyInstructions(configFilePath, options = {}) {
       console.error(
         `❌ Error: Flavor "${specificFlavor}" not found in configuration`
       );
+      console.log("\n");
       return;
     }
 
@@ -44,37 +46,7 @@ async function applyInstructions(configFilePath, options = {}) {
   } else {
     // When no specific flavor is set, use all flavors (default behavior)
     console.log(`Applying to all ${config.flavors.length} flavors`);
-  }
-
-  // Filter instructions based on platform and specific instructions if provided
-  let instructionsToRun = config.instructions;
-
-  // Filter by platform
-  if (platform !== "all") {
-    instructionsToRun = instructionsToRun.filter((instruction) =>
-      instruction.startsWith(platform + ":")
-    );
-  }
-
-  // Filter by specific instructions if provided
-  if (specificInstructions) {
-    const specificInstructionsList = specificInstructions
-      .split(",")
-      .map((i) => i.trim());
-    instructionsToRun = instructionsToRun.filter((instruction) => {
-      // Check if the full instruction is in the list or if just the processor part is in the list
-      const [instrPlatform, processor] = instruction.split(":");
-      return (
-        specificInstructionsList.includes(instruction) ||
-        specificInstructionsList.includes(processor) ||
-        specificInstructionsList.includes(`${instrPlatform}:${processor}`) ||
-        // Add this condition to check if the processor name contains the specified instruction
-        // This handles cases like "entitlements" matching "ios:entitlements"
-        specificInstructionsList.some((specInstr) =>
-          processor.includes(specInstr)
-        )
-      );
-    });
+    console.log("\n");
   }
 
   for (const instruction of instructionsToRun) {

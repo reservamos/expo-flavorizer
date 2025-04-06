@@ -19,6 +19,11 @@ async function applyAction(options) {
   let instructions = config.instructions || [];
 
   // Define all available instructions
+  // This list should be updated as new instructions are added
+  // to the project. It is used to determine which instructions
+  // can be applied based on the platform and specific instructions.
+  // The list should keep `ios:buildTargets` at the end to save all
+  // resources previously created in the xcode project.
   const allAvailableInstructions = [
     "android:androidManifest",
     "android:buildGradle",
@@ -32,6 +37,20 @@ async function applyAction(options) {
     "ios:podfile",
     "ios:buildTargets",
   ];
+
+  // Function to order instructions according to allAvailableInstructions
+  function orderInstructions(instructions, referenceOrder) {
+    return [...instructions].sort((a, b) => {
+      const indexA = referenceOrder.indexOf(a);
+      const indexB = referenceOrder.indexOf(b);
+
+      // If an instruction isn't in the reference list, put it at the end
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+
+      return indexA - indexB;
+    });
+  }
 
   // If no instructions in config, use all available
   if (!config.instructions || config.instructions.length === 0) {
@@ -116,6 +135,12 @@ async function applyAction(options) {
     });
   }
 
+  // Order the instructions based on the predefined order
+  displayInstructions = orderInstructions(
+    displayInstructions,
+    allAvailableInstructions
+  );
+
   // iterate for each instruction that will be applied
   displayInstructions.forEach((instruction) => {
     console.log(`🔹 ${chalk.yellow(instruction)}`);
@@ -123,10 +148,15 @@ async function applyAction(options) {
 
   console.log("\n");
 
-  // apply the instructions for each flavor with the provided options
+  const instructionsToRun = orderInstructions(
+    displayInstructions,
+    allAvailableInstructions
+  );
+
+  // Apply the instructions for each flavor with the provided options
   await applyInstructions(configFilePath, {
     platform,
-    instructions: specificInstructions,
+    instructions: instructionsToRun,
     flavor: specificFlavor,
   });
 }
