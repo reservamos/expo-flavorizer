@@ -103,7 +103,7 @@ function appendFlavors(buffer, config) {
 
     // Add resValues to the build.gradle
     // Convert camelCase keys to snake_case and wrap values in quotes
-    const resValues = flavor.android.resValues;
+    const resValues = flavor.android.resValues || {};
 
     Object.entries(snakeize(resValues)).forEach(([key, res]) => {
       buffer.push(
@@ -112,7 +112,7 @@ function appendFlavors(buffer, config) {
     });
 
     // Add manifestPlaceholders to the build.gradle
-    const manifestPlaceholders = flavor.android.manifestPlaceholders;
+    const manifestPlaceholders = flavor.android.manifestPlaceholders || {};
 
     const manifestPlaceholdersArray = Object.entries(manifestPlaceholders)
       .map(([key, value]) => `${key}: '${value}'`)
