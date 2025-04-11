@@ -6,11 +6,31 @@ const {
   validateIosFolder,
   validateXcodeProj,
 } = require("../../utils/validateDependencies");
+const chalk = require("chalk");
 
 async function IosLaunchScreenProcessor(config) {
   if (!config) {
     throw new Error("NoConfigurationFileException");
   }
+
+  const launchScreenTemplatePath = path.join(
+    __dirname,
+    "assets",
+    "LaunchScreen.storyboard"
+  );
+
+  if (!fs.existsSync(launchScreenTemplatePath)) {
+    throw new Error(
+      `Launch screen template not found at ${launchScreenTemplatePath}`
+    );
+  }
+
+  const launchScreenTemplateContent = fs.readFileSync(
+    launchScreenTemplatePath,
+    {
+      encoding: "utf-8",
+    }
+  );
 
   validateIosFolder();
   validateXcodeProj();
@@ -29,7 +49,76 @@ async function IosLaunchScreenProcessor(config) {
     if (launchScreen) {
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
-      const flavorLaunchScreenPath = `${process.cwd()}/ios/${flavorName}/SplashScreen.storyboard`;
+      const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+      const flavorLaunchScreenPath = `${flavorDirPath}/SplashScreen.storyboard`;
+
+      // Create flavor directory if it doesn't exist
+      if (!fs.existsSync(flavorDirPath)) {
+        fs.mkdirSync(flavorDirPath, { recursive: true });
+      }
+
+      // Clean up old launch screen files
+      const oldStoryboardPath = `${flavorDirPath}/SplashScreen-${flavorName}.storyboard`;
+      if (fs.existsSync(oldStoryboardPath)) {
+        fs.unlinkSync(oldStoryboardPath);
+        console.log(
+          `🧹 Removed old launch screen file: SplashScreen-${flavorName}.storyboard`
+        );
+      }
+
+      // Clean up existing launch screen file to refresh it
+      if (fs.existsSync(flavorLaunchScreenPath)) {
+        fs.unlinkSync(flavorLaunchScreenPath);
+        console.log(
+          `🧹 Removed existing launch screen file to create a fresh one`
+        );
+      }
+
+      // Make sure we clean up old image assets
+      const oldAssetsPath = `${flavorDirPath}/Images-${flavorName}.xcassets`;
+      if (fs.existsSync(oldAssetsPath)) {
+        // Look for old launch image and background assets
+        const oldLaunchImagePath = `${oldAssetsPath}/LaunchImage-${flavorName}.imageset`;
+        const oldLaunchBackgroundPath = `${oldAssetsPath}/LaunchBackground-${flavorName}.imageset`;
+
+        if (fs.existsSync(oldLaunchImagePath)) {
+          deleteDirectory(oldLaunchImagePath);
+          console.log(
+            `🧹 Removed old launch image assets: LaunchImage-${flavorName}.imageset`
+          );
+        }
+
+        if (fs.existsSync(oldLaunchBackgroundPath)) {
+          deleteDirectory(oldLaunchBackgroundPath);
+          console.log(
+            `🧹 Removed old launch background assets: LaunchBackground-${flavorName}.imageset`
+          );
+        }
+      }
+
+      // Ensure new assets directory exists
+      const newAssetsPath = `${flavorDirPath}/Images.xcassets`;
+      if (!fs.existsSync(newAssetsPath)) {
+        fs.mkdirSync(newAssetsPath, { recursive: true });
+      }
+
+      // Clean up existing assets with new naming format
+      const newLaunchImagePath = `${newAssetsPath}/LaunchImage.imageset`;
+      const newLaunchBackgroundPath = `${newAssetsPath}/LaunchBackground.imageset`;
+
+      if (fs.existsSync(newLaunchImagePath)) {
+        deleteDirectory(newLaunchImagePath);
+        console.log(
+          `🧹 Removed existing launch image assets to create fresh ones`
+        );
+      }
+
+      if (fs.existsSync(newLaunchBackgroundPath)) {
+        deleteDirectory(newLaunchBackgroundPath);
+        console.log(
+          `🧹 Removed existing launch background assets to create fresh ones`
+        );
+      }
 
       await generateBackgroundImage(flavorName, backgroundColor);
 
@@ -42,10 +131,7 @@ async function IosLaunchScreenProcessor(config) {
       );
 
       //  create launch screen file from template
-      fs.copyFileSync(
-        path.join(__dirname, "assets", `LaunchScreen.storyboard`),
-        flavorLaunchScreenPath
-      );
+      fs.writeFileSync(flavorLaunchScreenPath, launchScreenTemplateContent);
 
       //  configurate the launch screen file template
       const launchScreenContent = fs.readFileSync(flavorLaunchScreenPath, {
@@ -54,10 +140,10 @@ async function IosLaunchScreenProcessor(config) {
 
       nunjucks.configure({ autoescape: true });
       const launchScreenTemplate = nunjucks.renderString(launchScreenContent, {
-        IMAGE: `LaunchImage-${flavorName}`,
+        IMAGE: `LaunchImage`,
         IMAGE_WIDTH: imageWidth ?? 1024,
         IMAGE_HEIGHT: imageHeight ?? 1024,
-        BACKGROUND: `LaunchBackground-${flavorName}`,
+        BACKGROUND: `LaunchBackground`,
       });
 
       //  write the launch screen file
@@ -69,7 +155,7 @@ async function IosLaunchScreenProcessor(config) {
 }
 
 async function generateBackgroundImage(flavorName, backgroundColor) {
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchBackground-${flavorName}.imageset/background.png`;
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -107,7 +193,7 @@ async function generateBackgroundImage(flavorName, backgroundColor) {
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchBackground-${flavorName}.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
@@ -120,7 +206,7 @@ async function generateLogo(
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchImage-${flavorName}.imageset/image.png`;
+  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -172,9 +258,25 @@ async function generateLogo(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/LaunchImage-${flavorName}.imageset/Contents.json`,
+    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
+}
+
+function deleteDirectory(path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file) => {
+      const curPath = `${path}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // Recurse
+        deleteDirectory(curPath);
+      } else {
+        // Delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
 }
 
 module.exports = IosLaunchScreenProcessor;

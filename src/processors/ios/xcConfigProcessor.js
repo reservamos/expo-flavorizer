@@ -20,8 +20,35 @@ async function IosXcConfigProcessor(config) {
 
     const buildModes = ["Debug", "Release"];
 
+    // Create flavor directory if it doesn't exist
+    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    if (!fs.existsSync(flavorDirPath)) {
+      fs.mkdirSync(flavorDirPath, { recursive: true });
+    }
+
+    // Clean up existing xcconfig files to prevent duplication
     for (const buildMode of buildModes) {
-      const flavorXcConfig = `${buildMode}-${flavorName}.xcconfig`;
+      const oldXcConfigFilename = `${buildMode}-${flavorName}.xcconfig`;
+      const oldXcConfigPath = `${flavorDirPath}/${oldXcConfigFilename}`;
+
+      if (fs.existsSync(oldXcConfigPath)) {
+        fs.unlinkSync(oldXcConfigPath);
+        console.log(`🧹 Removed old xcconfig file: ${oldXcConfigFilename}`);
+      }
+
+      const newXcConfigFilename = `${buildMode}.xcconfig`;
+      const newXcConfigPath = `${flavorDirPath}/${newXcConfigFilename}`;
+
+      if (fs.existsSync(newXcConfigPath)) {
+        fs.unlinkSync(newXcConfigPath);
+        console.log(
+          `🧹 Removed existing xcconfig file: ${newXcConfigFilename}`
+        );
+      }
+    }
+
+    for (const buildMode of buildModes) {
+      const flavorXcConfig = `${buildMode}.xcconfig`;
       const flavorXcConfigPath = `${process.cwd()}/ios/${flavorName}/${flavorXcConfig}`;
 
       await generateXcConfigFile(

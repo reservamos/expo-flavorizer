@@ -38,9 +38,32 @@ async function IosEntitlementsProcessor(config) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
 
+    // Clean up existing entitlements files to prevent duplication
+    for (const buildMode of buildModes) {
+      const oldEntitlementsFilename = `${buildMode}-${flavorName}.entitlements`;
+      const oldEntitlementsPath = `${flavorDirPath}/${oldEntitlementsFilename}`;
+
+      if (fs.existsSync(oldEntitlementsPath)) {
+        fs.unlinkSync(oldEntitlementsPath);
+        console.log(
+          `🧹 Removed old entitlements file: ${oldEntitlementsFilename}`
+        );
+      }
+
+      const newEntitlementsFilename = `${buildMode}.entitlements`;
+      const newEntitlementsPath = `${flavorDirPath}/${newEntitlementsFilename}`;
+
+      if (fs.existsSync(newEntitlementsPath)) {
+        fs.unlinkSync(newEntitlementsPath);
+        console.log(
+          `🧹 Removed existing entitlements file: ${newEntitlementsFilename}`
+        );
+      }
+    }
+
     for (const buildMode of buildModes) {
       // Generate entitlements filename using build mode
-      const entitlementsFile = `${buildMode}-${flavorName}.entitlements`;
+      const entitlementsFile = `${buildMode}.entitlements`;
       const entitlementsPath = `${process.cwd()}/ios/${flavorName}/${entitlementsFile}`;
 
       // Generate entitlements file for this flavor and build mode

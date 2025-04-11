@@ -40,8 +40,29 @@ async function IosXcPrivacyInfoProcessor(config) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
 
+    // Clean up existing privacy info files to prevent duplication
+    const oldPrivacyInfoFilename = `PrivacyInfo-${flavorName}.xcprivacy`;
+    const oldPrivacyInfoPath = `${flavorDirPath}/${oldPrivacyInfoFilename}`;
+
+    if (fs.existsSync(oldPrivacyInfoPath)) {
+      fs.unlinkSync(oldPrivacyInfoPath);
+      console.log(
+        `🧹 Removed old privacy info file: ${oldPrivacyInfoFilename}`
+      );
+    }
+
+    const newPrivacyInfoFilename = `PrivacyInfo.xcprivacy`;
+    const newPrivacyInfoPath = `${flavorDirPath}/${newPrivacyInfoFilename}`;
+
+    if (fs.existsSync(newPrivacyInfoPath)) {
+      fs.unlinkSync(newPrivacyInfoPath);
+      console.log(
+        `🧹 Removed existing privacy info file: ${newPrivacyInfoFilename}`
+      );
+    }
+
     // Define the target privacy info path for this flavor
-    const flavorPrivacyInfoPath = `${flavorDirPath}/PrivacyInfo-${flavorName}.xcprivacy`;
+    const flavorPrivacyInfoPath = `${flavorDirPath}/PrivacyInfo.xcprivacy`;
 
     // Copy the privacy info file
     fs.writeFileSync(flavorPrivacyInfoPath, originalPrivacyInfoContent);

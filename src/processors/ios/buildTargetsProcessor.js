@@ -76,6 +76,7 @@ async function IosBuildTargetsProcessor(config) {
   const processUpdatePods = spawnSync("npx", ["pod-install"], {
     stdio: "inherit",
     shell: true,
+    cwd: process.cwd(),
   });
 
   // check if exists the expo-modules reference in the xcode project

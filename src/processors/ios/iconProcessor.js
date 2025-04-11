@@ -36,6 +36,29 @@ async function IosIconProcessor(config) {
       );
     }
 
+    // Create flavor directory if it doesn't exist
+    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    if (!fs.existsSync(flavorDirPath)) {
+      fs.mkdirSync(flavorDirPath, { recursive: true });
+    }
+
+    // Clean up old assets before creating new ones
+    const oldAssetsPath = `${flavorDirPath}/Images-${flavorName}.xcassets`;
+    if (fs.existsSync(oldAssetsPath)) {
+      console.log(
+        `🧹 Removing old image assets: Images-${flavorName}.xcassets`
+      );
+      deleteDirectory(oldAssetsPath);
+    }
+
+    // Ensure new assets directory exists
+    const newAssetsPath = `${flavorDirPath}/Images.xcassets`;
+    if (fs.existsSync(newAssetsPath)) {
+      console.log(`🧹 Removing existing image assets to create fresh ones`);
+      deleteDirectory(newAssetsPath);
+    }
+    fs.mkdirSync(newAssetsPath, { recursive: true });
+
     const iconBuffer = fs.readFileSync(defaultIcon);
     const contentsJson = {
       images: [],
@@ -45,7 +68,7 @@ async function IosIconProcessor(config) {
       },
     };
 
-    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images-${flavorName}.xcassets/AppIcon-${flavorName}.appiconset`;
+    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/AppIcon.appiconset`;
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];
@@ -90,6 +113,23 @@ async function IosIconProcessor(config) {
 
     console.log(`✅ Created iOS app icon for flavor ${flavorName}`);
   });
+}
+
+// Helper function to recursively delete directories
+function deleteDirectory(path) {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file) => {
+      const curPath = `${path}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // Recurse
+        deleteDirectory(curPath);
+      } else {
+        // Delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
 }
 
 module.exports = IosIconProcessor;

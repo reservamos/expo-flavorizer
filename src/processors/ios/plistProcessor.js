@@ -36,8 +36,25 @@ async function IosPlistProcessor(plistPath, config) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
 
+    // Clean up existing plist files to prevent duplication
+    const oldPlistFilename = `Info-${flavorName}.plist`;
+    const oldPlistPath = `${flavorDirPath}/${oldPlistFilename}`;
+
+    if (fs.existsSync(oldPlistPath)) {
+      fs.unlinkSync(oldPlistPath);
+      console.log(`🧹 Removed old plist file: ${oldPlistFilename}`);
+    }
+
+    const newPlistFilename = `Info.plist`;
+    const newPlistPath = `${flavorDirPath}/${newPlistFilename}`;
+
+    if (fs.existsSync(newPlistPath)) {
+      fs.unlinkSync(newPlistPath);
+      console.log(`🧹 Removed existing plist file: ${newPlistFilename}`);
+    }
+
     // Define the target plist path for this flavor
-    const flavorPlistFilePath = `${flavorDirPath}/Info-${flavorName}.plist`;
+    const flavorPlistFilePath = `${flavorDirPath}/Info.plist`;
 
     // Start with the original content
     let flavorPlistContent = originalPlistContent;
