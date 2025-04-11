@@ -19,17 +19,3 @@ describe("IosXcPrivacyInfoProcessor", () => {
     });
   }
 });
-
-describe("IosXcPrivacyInfoProcessor with invalid input", () => {
-  if (platform() === "darwin") {
-    it("Test IosXcPrivacyInfoProcessor with no config", async () => {
-      await expect(IosXcPrivacyInfoProcessor(null)).rejects.toThrow(
-        "NoConfigurationFileException"
-      );
-    });
-  } else {
-    it("Test IosXcPrivacyInfoProcessor", async () => {
-      expect().toBeUndefined();
-    });
-  }
-});

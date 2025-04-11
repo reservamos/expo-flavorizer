@@ -76,9 +76,11 @@ async function generateXcConfigFile(
   let buffer = [];
   const capitalizedFlavorName =
     flavor.flavorName.charAt(0).toUpperCase() + flavor.flavorName.slice(1);
+  const buildModeLC = buildMode.toLowerCase();
 
+  // Updated CocoaPods import line to match the expected format
   buffer.push(
-    `#include? "Pods/Target Support Files/Pods-common-${projectName}/Pods-common-${projectName}.${buildMode.toLowerCase()}.xcconfig"`
+    `#include? "Pods/Target Support Files/Pods-common-${flavor.flavorName}/Pods-common-${flavor.flavorName}.${buildModeLC}.xcconfig"`
   );
   buffer.push("");
   buffer.push(`BUNDLE_NAME=${flavor.flavorName}`);
