@@ -102,26 +102,59 @@ async function IosLaunchScreenProcessor(config) {
         fs.mkdirSync(newAssetsPath, { recursive: true });
       }
 
-      // Clean up existing assets with new naming format
-      const newLaunchImagePath = `${newAssetsPath}/LaunchImage.imageset`;
-      const newLaunchBackgroundPath = `${newAssetsPath}/LaunchBackground.imageset`;
+      // Clean up existing assets with new naming format (for backwards compatibility)
+      const oldLaunchImagePath = `${newAssetsPath}/LaunchImage.imageset`;
+      const oldLaunchBackgroundPath = `${newAssetsPath}/LaunchBackground.imageset`;
 
-      if (fs.existsSync(newLaunchImagePath)) {
-        deleteDirectory(newLaunchImagePath);
+      if (fs.existsSync(oldLaunchImagePath)) {
+        deleteDirectory(oldLaunchImagePath);
         console.log(
           `🧹 Removed existing launch image assets to create fresh ones`
         );
       }
 
-      if (fs.existsSync(newLaunchBackgroundPath)) {
-        deleteDirectory(newLaunchBackgroundPath);
+      if (fs.existsSync(oldLaunchBackgroundPath)) {
+        deleteDirectory(oldLaunchBackgroundPath);
         console.log(
           `🧹 Removed existing launch background assets to create fresh ones`
         );
       }
 
-      await generateBackgroundImage(flavorName, backgroundColor);
+      // Clean up new assets with Expo 52 naming format if they exist
+      const splashScreenLogoPath = `${newAssetsPath}/SplashScreenLogo.imageset`;
+      const splashScreenBackgroundPath = `${newAssetsPath}/SplashScreenBackground.colorset`;
 
+      if (fs.existsSync(splashScreenLogoPath)) {
+        deleteDirectory(splashScreenLogoPath);
+        console.log(
+          `🧹 Removed existing splash screen logo assets to create fresh ones`
+        );
+      }
+
+      if (fs.existsSync(splashScreenBackgroundPath)) {
+        deleteDirectory(splashScreenBackgroundPath);
+        console.log(
+          `🧹 Removed existing splash screen background assets to create fresh ones`
+        );
+      }
+
+      // Parse the background color to get RGB values
+      const alpha = "1.000";
+      let red = "0xFF",
+        green = "0xFF",
+        blue = "0xFF";
+
+      if (backgroundColor && backgroundColor.startsWith("#")) {
+        const hexColor = backgroundColor.substring(1);
+        if (hexColor.length === 6) {
+          red = `0x${hexColor.substring(0, 2)}`;
+          green = `0x${hexColor.substring(2, 4)}`;
+          blue = `0x${hexColor.substring(4, 6)}`;
+        }
+      }
+
+      // Generate background color and logo image
+      await generateBackgroundColor(flavorName, alpha, red, green, blue);
       await generateLogo(
         flavorName,
         image,
@@ -140,10 +173,10 @@ async function IosLaunchScreenProcessor(config) {
 
       nunjucks.configure({ autoescape: true });
       const launchScreenTemplate = nunjucks.renderString(launchScreenContent, {
-        IMAGE: `LaunchImage`,
-        IMAGE_WIDTH: imageWidth ?? 1024,
-        IMAGE_HEIGHT: imageHeight ?? 1024,
-        BACKGROUND: `LaunchBackground`,
+        ALPHA: alpha,
+        BLUE: blue,
+        GREEN: green,
+        RED: red,
       });
 
       //  write the launch screen file
@@ -154,46 +187,37 @@ async function IosLaunchScreenProcessor(config) {
   }
 }
 
-async function generateBackgroundImage(flavorName, backgroundColor) {
-  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
-  const imageset = path.resolve(imagesetPath);
-  const imagesetExists = fs.existsSync(imageset);
-
-  if (imagesetExists) {
-    fs.rmSync(imageset);
-  } else {
-    fs.mkdirSync(path.dirname(imageset), { recursive: true });
+async function generateBackgroundColor(flavorName, alpha, red, green, blue) {
+  // Create the colorset directory
+  const colorsetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/SplashScreenBackground.colorset`;
+  if (!fs.existsSync(colorsetPath)) {
+    fs.mkdirSync(colorsetPath, { recursive: true });
   }
 
-  sharp({
-    create: {
-      width: 1,
-      height: 1,
-      channels: 4,
-      background: backgroundColor,
-    },
-  }).toFile(imageset, (err) => {
-    if (err) {
-      throw err;
-    }
-  });
-
-  //   generate Contents.json
+  // Generate colorset Contents.json
   const contentsJson = {
-    images: [
+    colors: [
       {
-        filename: "background.png",
+        color: {
+          "color-space": "srgb",
+          components: {
+            alpha: alpha,
+            blue: blue.toString(16).toUpperCase().padStart(2, "0x"),
+            green: green.toString(16).toUpperCase().padStart(2, "0x"),
+            red: red.toString(16).toUpperCase().padStart(2, "0x"),
+          },
+        },
         idiom: "universal",
       },
     ],
     info: {
-      author: "xcode",
+      author: "flavorizer",
       version: 1,
     },
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
+    `${colorsetPath}/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
@@ -206,59 +230,77 @@ async function generateLogo(
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
-  const imageset = path.resolve(imagesetPath);
-  const imagesetExists = fs.existsSync(imageset);
+  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/SplashScreenLogo.imageset`;
 
-  if (imagesetExists) {
-    fs.rmSync(imageset);
-  } else {
-    fs.mkdirSync(path.dirname(imageset), { recursive: true });
+  if (!fs.existsSync(imagesetPath)) {
+    fs.mkdirSync(imagesetPath, { recursive: true });
   }
 
-  // resize image based on width, height and scale
-  const prefferedScale = imageScale ?? 1.0;
-  const prefferedImageWidth = imageWidth ?? 1024;
-  const prefferedImageHeight = imageHeight ?? 1024;
-  const scaledWidth = Math.round(prefferedImageWidth * prefferedScale);
-  const scaledHeight = Math.round(prefferedImageHeight * prefferedScale);
+  // Set maximum dimensions to 200x200 as per Expo 52 requirements
+  const maxWidth = 200;
+  const maxHeight = 200;
 
-  sharp({
-    create: {
-      width: scaledWidth,
-      height: scaledHeight,
-      channels: 4,
-      background: { r: 255, g: 255, b: 255, alpha: 0 },
-    },
-  })
-    .composite([
-      {
-        input: imageBuffer,
-        gravity: "centre",
-      },
-    ])
-    .toFile(imageset, (err) => {
-      if (err) {
-        throw err;
-      }
-    });
+  // Use provided dimensions or default to max values
+  const targetWidth = Math.min(imageWidth ?? maxWidth, maxWidth);
+  const targetHeight = Math.min(imageHeight ?? maxHeight, maxHeight);
 
-  //   generate Contents.json
+  // Generate image at 1x scale (base image)
+  await sharp(imageBuffer)
+    .resize({
+      width: targetWidth,
+      height: targetHeight,
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .toFile(`${imagesetPath}/logo.png`);
+
+  // Generate image at 2x scale
+  await sharp(imageBuffer)
+    .resize({
+      width: targetWidth * 2,
+      height: targetHeight * 2,
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .toFile(`${imagesetPath}/logo@2x.png`);
+
+  // Generate image at 3x scale
+  await sharp(imageBuffer)
+    .resize({
+      width: targetWidth * 3,
+      height: targetHeight * 3,
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .toFile(`${imagesetPath}/logo@3x.png`);
+
+  // Generate Contents.json
   const contentsJson = {
     images: [
       {
-        filename: "image.png",
+        filename: "logo.png",
         idiom: "universal",
+        scale: "1x",
+      },
+      {
+        filename: "logo@2x.png",
+        idiom: "universal",
+        scale: "2x",
+      },
+      {
+        filename: "logo@3x.png",
+        idiom: "universal",
+        scale: "3x",
       },
     ],
     info: {
-      author: "xcode",
+      author: "flavorizer",
       version: 1,
     },
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
+    `${imagesetPath}/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }

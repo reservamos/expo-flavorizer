@@ -35,359 +35,27 @@ else
   puts "Updating existing flavor target #{flavor}..."
 end
 
-# Create the flavor directory structure and ensure files exist
+# Get the flavor directory structure
 ios_dir = File.dirname(project_path)
 flavor_dir = File.join(ios_dir, "Flavors", flavor)
-FileUtils.mkdir_p(flavor_dir) unless Dir.exist?(flavor_dir)
 puts "Using flavor directory: #{flavor_dir}"
 
-# Create default flavor files if they don't exist
-files_to_create = {
-  "Debug.entitlements" => <<~XML,
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>aps-environment</key>
-        <string>development</string>
-    </dict>
-    </plist>
-  XML
+# Ensure Flavors group exists in the project
+main_group = project.main_group
+flavors_group = main_group.find_subpath('Flavors', true)
+puts "Flavors group #{flavors_group ? 'found' : 'created'}"
 
-  "Release.entitlements" => <<~XML,
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>aps-environment</key>
-        <string>production</string>
-    </dict>
-    </plist>
-  XML
-
-  "Debug.xcconfig" => <<~XCCONFIG,
-    DISPLAY_NAME=#{flavor.capitalize} Dev
-    BUNDLE_NAME=#{flavor}
-    PRODUCT_BUNDLE_IDENTIFIER=com.example.#{flavor}
-    MARKETING_VERSION=1.0.0
-    CURRENT_PROJECT_VERSION=1
-    SPLASH_SCREEN=SplashScreen
-  XCCONFIG
-
-  "Release.xcconfig" => <<~XCCONFIG,
-    DISPLAY_NAME=#{flavor.capitalize}
-    BUNDLE_NAME=#{flavor}
-    PRODUCT_BUNDLE_IDENTIFIER=com.example.#{flavor}
-    MARKETING_VERSION=1.0.0
-    CURRENT_PROJECT_VERSION=1
-    SPLASH_SCREEN=SplashScreen
-  XCCONFIG
-
-  "Info.plist" => <<~XML,
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>CFBundleDevelopmentRegion</key>
-        <string>$(DEVELOPMENT_LANGUAGE)</string>
-        <key>CFBundleDisplayName</key>
-        <string>$(DISPLAY_NAME)</string>
-        <key>CFBundleExecutable</key>
-        <string>$(EXECUTABLE_NAME)</string>
-        <key>CFBundleIdentifier</key>
-        <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-        <key>CFBundleInfoDictionaryVersion</key>
-        <string>6.0</string>
-        <key>CFBundleName</key>
-        <string>$(BUNDLE_NAME)</string>
-        <key>CFBundlePackageType</key>
-        <string>APPL</string>
-        <key>CFBundleShortVersionString</key>
-        <string>$(MARKETING_VERSION)</string>
-        <key>CFBundleVersion</key>
-        <string>$(CURRENT_PROJECT_VERSION)</string>
-        <key>LSRequiresIPhoneOS</key>
-        <true/>
-        <key>UILaunchStoryboardName</key>
-        <string>$(SPLASH_SCREEN)</string>
-        <key>UIRequiredDeviceCapabilities</key>
-        <array>
-            <string>armv7</string>
-        </array>
-        <key>UISupportedInterfaceOrientations</key>
-        <array>
-            <string>UIInterfaceOrientationPortrait</string>
-        </array>
-        <key>UISupportedInterfaceOrientations~ipad</key>
-        <array>
-            <string>UIInterfaceOrientationPortrait</string>
-            <string>UIInterfaceOrientationPortraitUpsideDown</string>
-            <string>UIInterfaceOrientationLandscapeLeft</string>
-            <string>UIInterfaceOrientationLandscapeRight</string>
-        </array>
-    </dict>
-    </plist>
-  XML
-
-  "PrivacyInfo.xcprivacy" => <<~XML,
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-        <key>NSPrivacyAccessedAPITypes</key>
-        <array>
-            <dict>
-                <key>NSPrivacyAccessedAPIType</key>
-                <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
-                <key>NSPrivacyAccessedAPITypeReasons</key>
-                <array>
-                    <string>1C8F.1</string>
-                </array>
-            </dict>
-        </array>
-        <key>NSPrivacyCollectedDataTypes</key>
-        <array/>
-        <key>NSPrivacyTrackingDomains</key>
-        <array/>
-    </dict>
-    </plist>
-  XML
-
-  "SplashScreen.storyboard" => <<~XML,
-    <?xml version="1.0" encoding="UTF-8"?>
-    <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="EXPO-VIEWCONTROLLER-1">
-        <device id="retina6_12" orientation="portrait" appearance="light"/>
-        <dependencies>
-            <deployment identifier="iOS"/>
-            <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
-            <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-            <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        </dependencies>
-        <scenes>
-            <!--View Controller-->
-            <scene sceneID="EXPO-SCENE-1">
-                <objects>
-                    <viewController storyboardIdentifier="SplashScreenViewController" id="EXPO-VIEWCONTROLLER-1" sceneMemberID="viewController">
-                        <view key="view" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="EXPO-ContainerView" userLabel="ContainerView">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="SplashScreenBackground" translatesAutoresizingMaskIntoConstraints="NO" id="EXPO-SplashScreenBackground" userLabel="SplashScreenBackground">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                </imageView>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashScreen" translatesAutoresizingMaskIntoConstraints="NO" id="EXPO-SplashScreen" userLabel="SplashScreen">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                </imageView>
-                            </subviews>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <constraints>
-                                <constraint firstItem="EXPO-SplashScreenBackground" firstAttribute="top" secondItem="EXPO-ContainerView" secondAttribute="top" id="1gX-mQ-vu6"/>
-                                <constraint firstItem="EXPO-SplashScreen" firstAttribute="top" secondItem="EXPO-ContainerView" secondAttribute="top" id="2VS-Uz-0LU"/>
-                                <constraint firstItem="EXPO-SplashScreenBackground" firstAttribute="leading" secondItem="EXPO-ContainerView" secondAttribute="leading" id="6tX-OG-Sck"/>
-                                <constraint firstItem="EXPO-SplashScreen" firstAttribute="leading" secondItem="EXPO-ContainerView" secondAttribute="leading" id="8rR-Aq-abP"/>
-                                <constraint firstItem="EXPO-SplashScreen" firstAttribute="bottom" secondItem="EXPO-ContainerView" secondAttribute="bottom" id="ABX-8g-7v4"/>
-                                <constraint firstItem="EXPO-SplashScreen" firstAttribute="trailing" secondItem="EXPO-ContainerView" secondAttribute="trailing" id="I6l-TP-6fn"/>
-                                <constraint firstItem="EXPO-SplashScreenBackground" firstAttribute="trailing" secondItem="EXPO-ContainerView" secondAttribute="trailing" id="jkI-2V-eW5"/>
-                                <constraint firstItem="EXPO-SplashScreenBackground" firstAttribute="bottom" secondItem="EXPO-ContainerView" secondAttribute="bottom" id="m2O-9V-SmB"/>
-                            </constraints>
-                            <viewLayoutGuide key="safeArea" id="Rmq-lb-GrQ"/>
-                        </view>
-                    </viewController>
-                    <placeholder placeholderIdentifier="IBFirstResponder" id="EXPO-PLACEHOLDER-1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                </objects>
-                <point key="canvasLocation" x="140.57971014492756" y="128.80434782608697"/>
-            </scene>
-        </scenes>
-        <resources>
-            <image name="SplashScreen" width="414" height="736"/>
-            <image name="SplashScreenBackground" width="1" height="1"/>
-        </resources>
-    </document>
-  XML
-}
-
-# Create folder for Images.xcassets
-images_dir = File.join(flavor_dir, "Images.xcassets")
-FileUtils.mkdir_p(images_dir) unless Dir.exist?(images_dir)
-
-# Create Contents.json for Images.xcassets
-contents_json = File.join(images_dir, "Contents.json")
-unless File.exist?(contents_json)
-  File.write(contents_json, <<~JSON)
-    {
-      "info" : {
-        "author" : "xcode",
-        "version" : 1
-      }
-    }
-  JSON
+# Find or create the flavor group
+flavor_group = flavors_group.find_subpath(flavor, false)
+if flavor_group.nil?
+  flavor_group = flavors_group.new_group(flavor)
+  puts "Created new flavor group for #{flavor}"
+else
+  puts "Using existing flavor group for #{flavor}"
+  # Remove any existing file references to avoid duplicates
+  flavor_group.clear
+  puts "Cleared existing file references from flavor group"
 end
-
-# Create AppIcon imageset
-appicon_dir = File.join(images_dir, "AppIcon.appiconset")
-FileUtils.mkdir_p(appicon_dir) unless Dir.exist?(appicon_dir)
-
-# Create Contents.json for AppIcon
-appicon_contents = File.join(appicon_dir, "Contents.json")
-unless File.exist?(appicon_contents)
-  File.write(appicon_contents, <<~JSON)
-    {
-      "images" : [
-        {
-          "idiom" : "iphone",
-          "scale" : "2x",
-          "size" : "20x20"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "3x",
-          "size" : "20x20"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "2x",
-          "size" : "29x29"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "3x",
-          "size" : "29x29"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "2x",
-          "size" : "40x40"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "3x",
-          "size" : "40x40"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "2x",
-          "size" : "60x60"
-        },
-        {
-          "idiom" : "iphone",
-          "scale" : "3x",
-          "size" : "60x60"
-        },
-        {
-          "idiom" : "ios-marketing",
-          "scale" : "1x",
-          "size" : "1024x1024"
-        }
-      ],
-      "info" : {
-        "author" : "xcode",
-        "version" : 1
-      }
-    }
-  JSON
-end
-
-# Create SplashScreen image assets
-splash_dir = File.join(images_dir, "SplashScreen.imageset")
-FileUtils.mkdir_p(splash_dir) unless Dir.exist?(splash_dir)
-
-# Create Contents.json for SplashScreen imageset
-splash_contents = File.join(splash_dir, "Contents.json")
-unless File.exist?(splash_contents)
-  File.write(splash_contents, <<~JSON)
-    {
-      "images" : [
-        {
-          "idiom" : "universal",
-          "filename" : "SplashScreen.png",
-          "scale" : "1x"
-        },
-        {
-          "idiom" : "universal",
-          "scale" : "2x"
-        },
-        {
-          "idiom" : "universal",
-          "scale" : "3x"
-        }
-      ],
-      "info" : {
-        "version" : 1,
-        "author" : "xcode"
-      }
-    }
-  JSON
-end
-
-# Create SplashScreen.png (a basic white image)
-splash_png = File.join(splash_dir, "SplashScreen.png")
-unless File.exist?(splash_png)
-  # Create a simple 1x1 white pixel PNG
-  File.open(splash_png, 'wb') do |f|
-    f.write([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 
-             0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0, 0, 0, 144, 119, 83, 
-             222, 0, 0, 0, 12, 73, 68, 65, 84, 120, 156, 99, 248, 207, 
-             0, 0, 3, 1, 1, 0, 39, 127, 108, 132, 0, 0, 0, 0, 
-             73, 69, 78, 68, 174, 66, 96, 130].pack('C*'))
-  end
-end
-
-# Create SplashScreenBackground image assets
-bg_dir = File.join(images_dir, "SplashScreenBackground.imageset")
-FileUtils.mkdir_p(bg_dir) unless Dir.exist?(bg_dir)
-
-# Create Contents.json for SplashScreenBackground imageset
-bg_contents = File.join(bg_dir, "Contents.json")
-unless File.exist?(bg_contents)
-  File.write(bg_contents, <<~JSON)
-    {
-      "images" : [
-        {
-          "idiom" : "universal",
-          "filename" : "SplashScreenBackground.png",
-          "scale" : "1x"
-        },
-        {
-          "idiom" : "universal",
-          "scale" : "2x"
-        },
-        {
-          "idiom" : "universal",
-          "scale" : "3x"
-        }
-      ],
-      "info" : {
-        "version" : 1,
-        "author" : "xcode"
-      }
-    }
-  JSON
-end
-
-# Create SplashScreenBackground.png (a basic white image)
-bg_png = File.join(bg_dir, "SplashScreenBackground.png")
-unless File.exist?(bg_png)
-  # Create a simple 1x1 white pixel PNG
-  File.open(bg_png, 'wb') do |f|
-    f.write([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 
-             0, 0, 0, 1, 0, 0, 0, 1, 8, 2, 0, 0, 0, 144, 119, 83, 
-             222, 0, 0, 0, 12, 73, 68, 65, 84, 120, 156, 99, 248, 207, 
-             0, 0, 3, 1, 1, 0, 39, 127, 108, 132, 0, 0, 0, 0, 
-             73, 69, 78, 68, 174, 66, 96, 130].pack('C*'))
-  end
-end
-
-# Write all the required files
-files_to_create.each do |filename, content|
-  filepath = File.join(flavor_dir, filename)
-  unless File.exist?(filepath)
-    puts "Creating #{filename}..."
-    File.write(filepath, content)
-  end
-end
-
-# Now update the Xcode project
-puts "Updating Xcode project with flavor files..."
 
 # Clean up dangling references in the project
 puts "Cleaning up any dangling references..."
@@ -417,28 +85,15 @@ project.targets.each do |target|
   end
 end
 
-# Ensure Flavors group exists
-main_group = project.main_group
-flavors_group = main_group.find_subpath('Flavors', true)
-puts "Flavors group #{flavors_group ? 'found' : 'created'}"
-
-# Find or create the flavor group
-flavor_group = flavors_group.find_subpath(flavor, false)
-if flavor_group.nil?
-  flavor_group = flavors_group.new_group(flavor)
-  puts "Created new flavor group for #{flavor}"
-else
-  puts "Using existing flavor group for #{flavor}"
-  # Remove any existing file references to avoid duplicates
-  flavor_group.clear
-  puts "Cleared existing file references from flavor group"
+# Helper function to check if a file exists
+def file_exists?(filepath)
+  File.exist?(filepath)
 end
 
-# Add files to the project (create references and add to group)
-added_files = {}
-
-# Function to add a file
+# Helper function to add a file reference
 def add_file_reference(project, group, filepath)
+  return nil unless file_exists?(filepath)
+  
   begin
     # First check if this file already has a reference in the project
     existing_refs = project.files.select do |file| 
@@ -457,7 +112,7 @@ def add_file_reference(project, group, filepath)
     
     # Create a new file reference directly in the specified group
     file_ref = group.new_file(filepath)
-    
+    puts "Added reference to #{filepath}"
     return file_ref
   rescue => e
     puts "Error adding file reference for #{filepath}: #{e.message}"
@@ -478,10 +133,23 @@ def valid_file_reference?(file_ref)
   end
 end
 
-# Add each file to the project
-files_to_create.keys.each do |filename|
+# List of common files we expect to exist in the flavor directory
+expected_files = [
+  "Debug.entitlements",
+  "Release.entitlements",
+  "Debug.xcconfig",
+  "Release.xcconfig",
+  "Info.plist",
+  "PrivacyInfo.xcprivacy",
+  "SplashScreen.storyboard"
+]
+
+# Add references to flavor-specific files (expected to be created by other processors)
+added_files = {}
+
+expected_files.each do |filename|
   filepath = File.join(flavor_dir, filename)
-  if File.exist?(filepath)
+  if file_exists?(filepath)
     file_ref = add_file_reference(project, flavor_group, filepath)
     if file_ref
       added_files[filepath] = file_ref
@@ -490,15 +158,22 @@ files_to_create.keys.each do |filename|
       puts "Failed to add #{filename} to Xcode project"
     end
   else
-    puts "Warning: #{filename} does not exist at #{filepath}"
+    puts "Warning: Expected file #{filename} does not exist at #{filepath}"
   end
 end
 
-# Add Images.xcassets as a special case
+# Add Images.xcassets if it exists
+images_dir = File.join(flavor_dir, "Images.xcassets")
 if Dir.exist?(images_dir)
   images_ref = add_file_reference(project, flavor_group, images_dir)
-  added_files[images_dir] = images_ref
-  puts "Added Images.xcassets to Xcode project"
+  if images_ref
+    added_files[images_dir] = images_ref
+    puts "Added Images.xcassets to Xcode project"
+  else
+    puts "Failed to add Images.xcassets to Xcode project"
+  end
+else
+  puts "Warning: Images.xcassets directory does not exist at #{images_dir}"
 end
 
 # Get resources phase 
