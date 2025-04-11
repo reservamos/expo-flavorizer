@@ -1,0 +1,112 @@
+{
+  "app": {
+    "android": {
+      "flavorDimensions": "dimensions-app"
+    },
+    "ios": {
+      "buildSettings": {
+        "IPHONEOS_DEPLOYMENT_TARGET": "15.6"
+      }
+    }
+  },
+  "flavors": [
+    {
+      "flavorName": "apple",
+      "appName": "Apple App",
+      "defaultIcon": "assets/flavorizer/icon-apple.png",
+      "android": {
+        "applicationId": "com.example.apple",
+        "versionString": "2.2.0",
+        "buildNumber": "020200",
+        "adaptiveIcon": {
+          "background": "assets/flavorizer/bg-apple.png",
+          "foreground": "assets/flavorizer/fg-apple.png",
+          "foregroundScale": "0.55"
+        },
+        "splash": {
+          "image": "assets/flavorizer/fg-apple.png",
+          "imageScale": "0.8",
+          "resizeMode": "cover",
+          "backgroundColor": "#C35955"
+        }
+      },
+      "ios": {
+        "bundleId": "com.example.apple",
+        "versionString": "2.2.0",
+        "buildNumber": "020200",
+        "launchScreen": {
+          "backgroundColor": "#C35955",
+          "image": "assets/flavorizer/fg-apple.png"
+        }
+      }
+    },
+    {
+      "flavorName": "banana",
+      "appName": "Banana App",
+      "defaultIcon": "assets/flavorizer/icon-banana.png",
+      "android": {
+        "applicationId": "com.example.banana",
+        "versionString": "3.0.0",
+        "buildNumber": "300000",
+        "adaptiveIcon": {
+          "background": "assets/flavorizer/bg-banana.png",
+          "foreground": "assets/flavorizer/fg-banana.png",
+          "foregroundScale": "0.6"
+        },
+        "splash": {
+          "image": "assets/flavorizer/fg-banana.png",
+          "imageScale": "0.8",
+          "resizeMode": "cover",
+          "backgroundColor": "#E4C65C"
+        },
+        "resValues": {
+          "variableOne": {
+            "type": "string",
+            "value": "test variable one"
+          },
+          "variableTwo": {
+            "type": "string",
+            "value": "test variable two"
+          }
+        },
+        "buildConfigFields": {
+          "fieldOne": {
+            "type": "String",
+            "value": "test field one"
+          },
+          "fieldTwo": {
+            "type": "char",
+            "value": "y"
+          },
+          "fieldThree": {
+            "type": "double",
+            "value": "20.0"
+          }
+        }
+      },
+      "ios": {
+        "bundleId": "com.example.banana",
+        "versionString": "3.0.0",
+        "buildNumber": "300000",
+        "launchScreen": {
+          "backgroundColor": "#E4C65C",
+          "image": "assets/flavorizer/fg-banana.png"
+        }
+      }
+    }
+  ],
+  "instructions": [
+    "android:androidManifest",
+    "android:buildGradle",
+    "android:icons",
+    "android:splashScreen",
+    "ios:entitlements",
+    "ios:xcconfig",
+    "ios:xcprivacyinfo",
+    "ios:plist",
+    "ios:icons",
+    "ios:launchScreen",
+    "ios:podfile",
+    "ios:buildTargets"
+  ]
+}
