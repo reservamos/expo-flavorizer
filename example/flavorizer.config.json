@@ -1,7 +1,7 @@
 {
   "app": {
     "android": {
-      "flavorDimensions": "dimensions-app"
+      "flavorDimensions": "flavorizer-app"
     },
     "ios": {
       "buildSettings": {
@@ -25,7 +25,7 @@
         },
         "splash": {
           "image": "assets/flavorizer/fg-apple.png",
-          "imageScale": "0.8",
+          "imageScale": "0.6",
           "resizeMode": "cover",
           "backgroundColor": "#C35955"
         }
@@ -47,7 +47,7 @@
       "android": {
         "applicationId": "com.example.banana",
         "versionString": "3.0.0",
-        "buildNumber": "300000",
+        "buildNumber": "030000",
         "adaptiveIcon": {
           "background": "assets/flavorizer/bg-banana.png",
           "foreground": "assets/flavorizer/fg-banana.png",
@@ -55,7 +55,7 @@
         },
         "splash": {
           "image": "assets/flavorizer/fg-banana.png",
-          "imageScale": "0.8",
+          "imageScale": "0.6",
           "resizeMode": "cover",
           "backgroundColor": "#E4C65C"
         },
@@ -87,7 +87,7 @@
       "ios": {
         "bundleId": "com.example.banana",
         "versionString": "3.0.0",
-        "buildNumber": "300000",
+        "buildNumber": "030000",
         "launchScreen": {
           "backgroundColor": "#E4C65C",
           "image": "assets/flavorizer/fg-banana.png"

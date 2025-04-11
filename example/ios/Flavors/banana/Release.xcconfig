@@ -1,0 +1,8 @@
+#include? "Pods/Target Support Files/Pods-common-banana/Pods-common-banana.release.xcconfig"
+
+BUNDLE_NAME=banana
+DISPLAY_NAME=Banana App
+PRODUCT_BUNDLE_IDENTIFIER=com.example.banana
+MARKETING_VERSION=3.0.0
+CURRENT_PROJECT_VERSION=030000
+SPLASH_SCREEN=SplashScreen.storyboard

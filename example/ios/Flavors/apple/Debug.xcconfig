@@ -1,0 +1,8 @@
+#include? "Pods/Target Support Files/Pods-common-apple/Pods-common-apple.debug.xcconfig"
+
+BUNDLE_NAME=apple
+DISPLAY_NAME=Apple App
+PRODUCT_BUNDLE_IDENTIFIER=com.example.apple
+MARKETING_VERSION=2.2.0
+CURRENT_PROJECT_VERSION=020200
+SPLASH_SCREEN=SplashScreen.storyboard

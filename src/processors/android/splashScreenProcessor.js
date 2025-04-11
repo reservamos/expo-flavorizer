@@ -4,7 +4,7 @@ const path = require("path");
 const { XMLParser, XMLBuilder, XMLValidator } = require("fast-xml-parser");
 
 async function AndroidSplashScreenProcessor(config) {
-  const size = [1284, 2778];
+  const size = [200, 200];
   const densities = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
 
   if (!config) {
@@ -77,8 +77,8 @@ async function generateSplashScreenImage(
 
   // resize image based on width, height and scale
   const prefferedScale = imageScale ?? 1.0;
-  const prefferedImageWidth = imageWidth ?? 1024;
-  const prefferedImageHeight = imageHeight ?? 1024;
+  const prefferedImageWidth = imageWidth ?? 200;
+  const prefferedImageHeight = imageHeight ?? 200;
   const scaledWidth = Math.round(prefferedImageWidth * prefferedScale);
   const scaledHeight = Math.round(prefferedImageHeight * prefferedScale);
 
