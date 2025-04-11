@@ -49,7 +49,7 @@ async function IosLaunchScreenProcessor(config) {
     if (launchScreen) {
       const { image, backgroundColor, imageScale, imageWidth, imageHeight } =
         launchScreen;
-      const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+      const flavorDirPath = `${process.cwd()}/ios/Flavors/${flavorName}`;
       const flavorLaunchScreenPath = `${flavorDirPath}/SplashScreen.storyboard`;
 
       // Create flavor directory if it doesn't exist
@@ -155,7 +155,7 @@ async function IosLaunchScreenProcessor(config) {
 }
 
 async function generateBackgroundImage(flavorName, backgroundColor) {
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
+  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -193,7 +193,7 @@ async function generateBackgroundImage(flavorName, backgroundColor) {
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
+    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
@@ -206,7 +206,7 @@ async function generateLogo(
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
+  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -258,7 +258,7 @@ async function generateLogo(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
+    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }

@@ -21,7 +21,7 @@ async function IosXcConfigProcessor(config) {
     const buildModes = ["Debug", "Release"];
 
     // Create flavor directory if it doesn't exist
-    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    const flavorDirPath = `${process.cwd()}/ios/Flavors/${flavorName}`;
     if (!fs.existsSync(flavorDirPath)) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
@@ -49,7 +49,7 @@ async function IosXcConfigProcessor(config) {
 
     for (const buildMode of buildModes) {
       const flavorXcConfig = `${buildMode}.xcconfig`;
-      const flavorXcConfigPath = `${process.cwd()}/ios/${flavorName}/${flavorXcConfig}`;
+      const flavorXcConfigPath = `${process.cwd()}/ios/Flavors/${flavorName}/${flavorXcConfig}`;
 
       await generateXcConfigFile(
         buildMode,

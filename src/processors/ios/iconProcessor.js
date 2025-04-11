@@ -37,7 +37,7 @@ async function IosIconProcessor(config) {
     }
 
     // Create flavor directory if it doesn't exist
-    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    const flavorDirPath = `${process.cwd()}/ios/Flavors/${flavorName}`;
     if (!fs.existsSync(flavorDirPath)) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
@@ -68,7 +68,7 @@ async function IosIconProcessor(config) {
       },
     };
 
-    const iOSAppPath = `${process.cwd()}/ios/${flavorName}/Images.xcassets/AppIcon.appiconset`;
+    const iOSAppPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/AppIcon.appiconset`;
 
     Object.keys(sizes).forEach((size) => {
       const [width, height] = sizes[size];

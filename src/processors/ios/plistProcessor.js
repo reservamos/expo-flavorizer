@@ -31,7 +31,7 @@ async function IosPlistProcessor(plistPath, config) {
     const flavorName = flavor.flavorName;
 
     // Create flavor directory if it doesn't exist
-    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    const flavorDirPath = `${process.cwd()}/ios/Flavors/${flavorName}`;
     if (!fs.existsSync(flavorDirPath)) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }

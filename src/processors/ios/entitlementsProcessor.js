@@ -33,7 +33,7 @@ async function IosEntitlementsProcessor(config) {
     const { flavorName } = flavor;
 
     // Create flavor directory if it doesn't exist
-    const flavorDirPath = `${process.cwd()}/ios/${flavorName}`;
+    const flavorDirPath = `${process.cwd()}/ios/Flavors/${flavorName}`;
     if (!fs.existsSync(flavorDirPath)) {
       fs.mkdirSync(flavorDirPath, { recursive: true });
     }
@@ -64,7 +64,7 @@ async function IosEntitlementsProcessor(config) {
     for (const buildMode of buildModes) {
       // Generate entitlements filename using build mode
       const entitlementsFile = `${buildMode}.entitlements`;
-      const entitlementsPath = `${process.cwd()}/ios/${flavorName}/${entitlementsFile}`;
+      const entitlementsPath = `${process.cwd()}/ios/Flavors/${flavorName}/${entitlementsFile}`;
 
       // Generate entitlements file for this flavor and build mode
       await generateEntitlementsFile(buildMode, flavor, entitlementsPath);
