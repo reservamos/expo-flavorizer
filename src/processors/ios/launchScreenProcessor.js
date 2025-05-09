@@ -103,8 +103,8 @@ async function IosLaunchScreenProcessor(config) {
       }
 
       // Clean up existing assets with new naming format
-      const newLaunchImagePath = `${newAssetsPath}/LaunchImage.imageset`;
-      const newLaunchBackgroundPath = `${newAssetsPath}/LaunchBackground.imageset`;
+      const newLaunchImagePath = `${newAssetsPath}/LaunchImage-${flavorName}.imageset`;
+      const newLaunchBackgroundPath = `${newAssetsPath}/LaunchBackground-${flavorName}.imageset`;
 
       if (fs.existsSync(newLaunchImagePath)) {
         deleteDirectory(newLaunchImagePath);
@@ -140,10 +140,10 @@ async function IosLaunchScreenProcessor(config) {
 
       nunjucks.configure({ autoescape: true });
       const launchScreenTemplate = nunjucks.renderString(launchScreenContent, {
-        IMAGE: `LaunchImage`,
+        IMAGE: `LaunchImage-${flavorName}`,
         IMAGE_WIDTH: imageWidth ?? 1024,
         IMAGE_HEIGHT: imageHeight ?? 1024,
-        BACKGROUND: `LaunchBackground`,
+        BACKGROUND: `LaunchBackground-${flavorName}`,
       });
 
       //  write the launch screen file
@@ -155,7 +155,7 @@ async function IosLaunchScreenProcessor(config) {
 }
 
 async function generateBackgroundImage(flavorName, backgroundColor) {
-  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/background.png`;
+  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground-${flavorName}.imageset/background.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -193,7 +193,7 @@ async function generateBackgroundImage(flavorName, backgroundColor) {
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground.imageset/Contents.json`,
+    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchBackground-${flavorName}.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
@@ -206,7 +206,7 @@ async function generateLogo(
   imageHeight
 ) {
   const imageBuffer = fs.readFileSync(imagePath);
-  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/image.png`;
+  const imagesetPath = `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage-${flavorName}.imageset/image.png`;
   const imageset = path.resolve(imagesetPath);
   const imagesetExists = fs.existsSync(imageset);
 
@@ -258,7 +258,7 @@ async function generateLogo(
   };
 
   fs.writeFileSync(
-    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage.imageset/Contents.json`,
+    `${process.cwd()}/ios/Flavors/${flavorName}/Images.xcassets/LaunchImage-${flavorName}.imageset/Contents.json`,
     JSON.stringify(contentsJson, null, 2)
   );
 }
