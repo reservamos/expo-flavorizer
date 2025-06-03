@@ -39,6 +39,13 @@ function configTemplate() {
             image: "path/to/your/foreground-image.png",
           },
         },
+        extra: {
+          configFiles: [
+            {
+              output: "src/config/apple/environment.js"
+            }
+          ]
+        }
       },
     ],
     instructions: [
@@ -51,6 +58,7 @@ function configTemplate() {
       "ios:podfile",
       "ios:buildTargets",
       "ios:plist",
+      "extra:configFiles"
     ],
   };
 }

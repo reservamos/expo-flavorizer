@@ -11,6 +11,7 @@ const IosLaunchScreenProcessor = require("../processors/ios/launchScreenProcesso
 const IosPodfileProcessor = require("../processors/ios/podfileProcessor");
 const IosBuildTargetsProcessor = require("../processors/ios/buildTargetsProcessor");
 const IosPlistProcessor = require("../processors/ios/plistProcessor");
+const ConfigFilesProcessor = require("../processors/config/configFilesProcessor");
 
 async function applyInstructions(configFilePath) {
   const config = configLoader(configFilePath);
@@ -122,6 +123,15 @@ async function applyInstructions(configFilePath) {
           console.log(`✅ LaunchScreen updated!\n`);
         } catch (error) {
           console.error("❌ Error updating launchScreen:", error, "\n");
+        }
+        break;
+      case "extra:configFiles":
+        try {
+          console.log("Processing config files...");
+          await ConfigFilesProcessor(config);
+          console.log(`✅ Config files processed!\n`);
+        } catch (error) {
+          console.error("❌ Error processing config files:", error, "\n");
         }
         break;
     }

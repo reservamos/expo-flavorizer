@@ -37,6 +37,13 @@
           "backgroundColor": "#C35955",
           "image": "testResources/assets/fg-apple.png"
         }
+      },
+      "extra": {
+        "configFiles": [
+          {
+            "output": "src/config/apple/environment.js"
+          }
+        ]
       }
     },
     {
@@ -101,6 +108,7 @@
     "ios:launchScreen",
     "ios:podfile",
     "ios:buildTargets",
-    "ios:plist"
+    "ios:plist",
+    "extra:configFiles"
   ]
 }
