@@ -190,7 +190,8 @@ async function generateColorsXML(flavorName, backgroundColor) {
     const colorsContent = `<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splashscreen_background">${backgroundColor}</color>
-</resources>`;
+</resources>
+`;
 
     fs.writeFileSync(colors, colorsContent);
   }
@@ -216,7 +217,8 @@ async function generateSplashScreenXML(flavorName) {
       android:src="@drawable/splashscreen_image"
     />
   </item>
-</layer-list>`;
+</layer-list>
+`;
 
   fs.writeFileSync(xml, xmlContent);
 }
